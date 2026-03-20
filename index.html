@@ -890,7 +890,7 @@ window.syncAll = async (showMsg=true) => {
 // ═══════════════════════════════════════════
 function computeTotals() {
   const monthly = parseFloat(DATA.settings?.monthly_amount||200);
-  let income=6600;
+  let income=6620;
   Object.values(DATA.contributions).forEach(md=>Object.values(md).forEach(p=>{ if(p) income+=monthly; }));
   const spent = DATA.expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
   return { income, spent, balance: income-spent, monthly };
