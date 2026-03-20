@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#080810"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>A2DV Boys Fund Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══ VARIABLES ═══ */
+:root {
+  --gold: #D4AF37; --gold-l: #F5D060; --gold-dim: rgba(212,175,55,0.13);
+  --bg: #06060f; --bg2: #0c0c1a; --bg3: #121226;
+  --card: rgba(255,255,255,0.038); --cb: rgba(255,255,255,0.065);
+  --text: #eaeaf6; --sub: #5c5c80; --muted: #2e2e50;
+  --green: #22c55e; --red: #ef4444; --blue: #3b82f6;
+  --radius: 16px; --radius-lg: 22px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+input,select,button{font-family:'Outfit',sans-serif;}
+::-webkit-scrollbar{width:2px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px;}
+
+/* ═══ KEYFRAMES ═══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes toastPop{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,175,55,0.15)}50%{box-shadow:0 0 50px rgba(212,175,55,0.45)}}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(22px,-16px) scale(1.04)}70%{transform:translate(-14px,12px) scale(.97)}}
+@keyframes blink{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes barRise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes countAnim{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sweep{0%{background-position:-200% center}100%{background-position:200% center}}
+
+/* ═══ SETUP / OVERLAY ═══ */
+#setup-overlay{
+  position:fixed;inset:0;z-index:3000;
+  background:radial-gradient(ellipse at 30% 40%, #1a0e3a 0%, var(--bg) 65%);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.setup-float{position:absolute;border-radius:50%;filter:blur(70px);animation:float 10s ease infinite;}
+.sf1{width:380px;height:380px;background:rgba(212,175,55,0.06);top:-100px;right:-100px;animation-delay:-3s;}
+.sf2{width:260px;height:260px;background:rgba(59,130,246,0.04);bottom:-60px;left:-60px;animation-delay:-7s;}
+
+.setup-card{
+  width:100%;max-width:480px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:24px;padding:36px;
+  backdrop-filter:blur(20px);
+  position:relative;z-index:2;
+  animation:fadeUp .5s ease;
+}
+.setup-logo{text-align:center;margin-bottom:28px;}
+.setup-icon{
+  width:80px;height:80px;border-radius:24px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 14px;
+  animation:glow 3s ease infinite;
+}
+.setup-h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:800;color:#fff;line-height:1;}
+.setup-sub{font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-top:5px;font-weight:600;}
+
+.step{display:none;} .step.active{display:block;animation:fadeIn .3s ease;}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
+.step-desc{font-size:12px;color:var(--sub);margin-bottom:20px;line-height:1.6;}
+
+.fi{
+  width:100%;padding:12px 15px;border-radius:12px;font-size:14px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  color:#fff;outline:none;transition:border-color .2s;margin-bottom:11px;
+}
+.fi:focus{border-color:var(--gold);}
+.fi::placeholder{color:var(--muted);}
+.btn-gold{
+  width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));
+  color:#000;font-weight:700;font-size:14px;transition:all .2s;
+  position:relative;overflow:hidden;
+}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(212,175,55,0.4);}
+.btn-gold:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.hint{font-size:11px;color:var(--sub);text-align:center;margin-top:12px;}
+.err-box{color:var(--red);font-size:12px;padding:8px 12px;background:rgba(239,68,68,0.1);border-radius:9px;margin-bottom:10px;display:none;}
+.link-box{
+  background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);
+  border-radius:12px;padding:14px;margin-bottom:14px;
+  font-size:12px;color:var(--text);line-height:1.7;
+}
+.link-box strong{color:var(--gold);}
+.copy-link{
+  width:100%;padding:10px;border-radius:10px;border:1px solid rgba(212,175,55,0.3);
+  background:rgba(212,175,55,0.06);color:var(--gold);font-size:12px;
+  cursor:pointer;font-weight:600;margin-bottom:10px;transition:all .2s;
+}
+.copy-link:hover{background:rgba(212,175,55,0.12);}
+.config-box{
+  background:rgba(0,0,0,0.3);border:1px solid var(--cb);
+  border-radius:12px;padding:16px;margin:14px 0;font-size:11px;
+  color:var(--sub);line-height:1.8;font-family:monospace;
+}
+.config-box span{color:var(--gold);}
+.tab-row{display:flex;gap:5px;background:rgba(255,255,255,0.04);border-radius:11px;padding:4px;margin-bottom:20px;}
+.tab-b{flex:1;padding:9px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;background:transparent;color:var(--sub);}
+.tab-b.on{background:var(--gold);color:#000;}
+.progress-steps{display:flex;align-items:center;gap:6px;margin-bottom:24px;}
+.ps{width:28px;height:4px;border-radius:99px;background:var(--muted);transition:background .3s;}
+.ps.done{background:var(--gold);}
+
+/* ═══ LOADING ═══ */
+#loading{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.ld-icon{font-size:44px;animation:blink 1.5s ease infinite;}
+.ld-txt{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;color:var(--gold);}
+.spinner{width:26px;height:26px;border:2.5px solid rgba(212,175,55,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
+
+/* ═══ APP ═══ */
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.on{display:flex;}
+
+/* ═══ SYNC BAR ═══ */
+#sync{height:2px;position:fixed;top:0;left:0;right:0;z-index:9999;display:none;
+  background:linear-gradient(90deg,var(--gold),var(--gold-l),var(--gold));
+  background-size:200%;animation:sweep 1.2s linear infinite;}
+
+/* ═══ HEADER ═══ */
+.hdr{
+  position:sticky;top:0;z-index:400;height:58px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  background:rgba(6,6,15,0.93);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--cb);
+}
+.hdr-logo{display:flex;align-items:center;gap:10px;}
+.hdr-ico{width:33px;height:33px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:14px;}
+.hdr-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:800;color:#fff;line-height:1;}
+.hdr-tag{font-size:8px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;}
+.hdr-r{display:flex;align-items:center;gap:5px;}
+.ico-btn{background:none;border:none;cursor:pointer;color:var(--sub);padding:7px;border-radius:8px;display:flex;align-items:center;transition:color .2s;position:relative;}
+.ico-btn:hover{color:var(--gold);}
+.rbadge{font-size:9px;color:var(--gold);padding:3px 9px;border-radius:99px;background:var(--gold-dim);font-weight:700;border:1px solid rgba(212,175,55,0.18);}
+.ndot{width:7px;height:7px;background:var(--red);border-radius:50%;position:absolute;top:4px;right:3px;}
+
+/* ═══ LAYOUT ═══ */
+.layout{display:flex;flex:1;max-width:1260px;margin:0 auto;width:100%;}
+.sidebar{width:210px;flex-shrink:0;padding:16px 10px;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--cb);}
+.nv{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:11px;border:none;cursor:pointer;background:transparent;color:var(--sub);font-size:13px;font-weight:500;transition:all .2s;width:100%;text-align:left;}
+.nv:hover{color:var(--text);background:rgba(255,255,255,0.035);}
+.nv.on{background:var(--gold-dim);color:var(--gold);font-weight:600;border:1px solid rgba(212,175,55,0.1);}
+.nvb{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;border-radius:99px;padding:2px 6px;}
+
+/* ═══ MAIN ═══ */
+.main{flex:1;padding:20px 18px 100px;min-width:0;}
+.pg{display:none;animation:fadeUp .3s ease;}
+.pg.on{display:block;}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--card);border:1px solid var(--cb);border-radius:var(--radius);padding:18px;transition:all .25s;}
+.chov:hover{transform:translateY(-2px);border-color:rgba(212,175,55,0.15);box-shadow:0 8px 30px rgba(0,0,0,0.35);}
+
+/* ═══ HERO ═══ */
+.hero{
+  border-radius:var(--radius-lg);padding:28px;
+  background:linear-gradient(135deg,#0f0d38 0%,#1c0e5e 45%,#0b1a38 100%);
+  position:relative;overflow:hidden;margin-bottom:16px;
+  animation:glow 5s ease infinite;
+}
+.hero::before{content:'';position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.11),transparent);top:-70px;right:-60px;}
+.hero::after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.07),transparent);bottom:-30px;left:28%;}
+.live-pill{position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:4px;font-size:9px;color:var(--green);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.18);border-radius:99px;padding:3px 9px;font-weight:700;}
+.live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1.5s ease infinite;}
+.bal-l{color:rgba(255,255,255,0.45);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;}
+.bal-v{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,8.5vw,58px);font-weight:800;color:#fff;line-height:1;margin-bottom:4px;position:relative;z-index:1;}
+.bal-v span{background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bal-s{font-size:12px;font-weight:500;margin-bottom:20px;}
+.hstats{display:flex;gap:22px;flex-wrap:wrap;position:relative;z-index:1;}
+.hs-l{font-size:9px;color:rgba(255,255,255,0.38);margin-bottom:1px;}
+.hs-v{font-size:15px;font-weight:700;}
+
+/* ═══ STAT GRID ═══ */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;}
+.sc{padding:16px 14px;}
+.sc-i{font-size:16px;margin-bottom:8px;}
+.sc-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;line-height:1;margin-bottom:2px;}
+.sc-l{font-size:10px;color:var(--sub);font-weight:500;}
+
+/* ═══ SECTION TITLE ═══ */
+.st{font-size:10px;color:var(--sub);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+
+/* ═══ CHARTS ═══ */
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.cbars{height:82px;display:flex;align-items:flex-end;gap:5px;margin-top:9px;}
+.cb-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.cb-b{width:100%;border-radius:4px 4px 0 0;transform-origin:bottom;animation:barRise .6s cubic-bezier(.4,0,.2,1);}
+.cb-l{font-size:8px;color:var(--sub);}
+
+/* ═══ MEMBERS ═══ */
+.ml{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.mc{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.av{width:41px;height:41px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;}
+.av-p{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;}
+.av-u{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#000;}
+.mi{flex:1;min-width:0;}
+.mn{font-weight:700;font-size:14px;color:var(--text);}
+.mt{font-size:11px;color:var(--sub);margin-top:1px;}
+.ma{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.pb{padding:6px 13px;border-radius:8px;border:none;cursor:pointer;font-size:11px;font-weight:700;transition:all .2s;}
+.pb-p{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.18);}
+.pb-u{background:rgba(239,68,68,0.09);color:var(--red);border:1px solid rgba(239,68,68,0.18);}
+.pb:disabled{opacity:.5;cursor:not-allowed;}
+.macts{display:flex;gap:3px;}
+.it{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;transition:color .2s;}
+
+/* ═══ EXPENSES ═══ */
+.el{display:flex;flex-direction:column;gap:8px;}
+.ec{display:flex;align-items:center;gap:11px;padding:13px 15px;}
+.ei{flex:1;min-width:0;}
+.ed{font-weight:600;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.em{font-size:11px;color:var(--sub);margin-top:1px;}
+.ea{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:800;color:var(--red);}
+
+/* ═══ HISTORY ═══ */
+.tl{display:flex;flex-direction:column;gap:7px;}
+.tc{display:flex;align-items:center;gap:11px;padding:11px 14px;}
+.ti{flex:1;min-width:0;}
+.td{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tdt{font-size:10px;color:var(--sub);}
+.tr{text-align:right;}
+.ta{font-weight:700;font-size:13px;}
+.tb{font-size:10px;color:var(--sub);}
+
+/* ═══ MILESTONES ═══ */
+.mscard{padding:16px 18px;}
+.msi{display:flex;align-items:center;gap:12px;}
+.ms-ico{width:41px;height:41px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ms-nm{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:800;}
+.ms-sb{font-size:11px;color:var(--sub);margin-top:1px;}
+.pbar{height:5px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-top:7px;}
+.pfill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+
+/* ═══ BUTTONS ═══ */
+.btn{padding:9px 17px;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
+.bp{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#000;}
+.bp:hover{box-shadow:0 4px 18px rgba(212,175,55,0.4);transform:translateY(-1px);}
+.bp:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.bg{background:rgba(255,255,255,0.06);color:var(--sub);border:1px solid var(--cb);}
+.bg:hover{background:rgba(255,255,255,0.09);color:var(--text);}
+.bd{background:rgba(239,68,68,0.09);color:var(--red);border:1px solid rgba(239,68,68,0.18);}
+.bd:hover{background:rgba(239,68,68,0.16);}
+.bsm{padding:7px 12px;font-size:12px;}
+.bxs{padding:5px 10px;font-size:11px;border-radius:8px;}
+
+/* ═══ MODAL ═══ */
+.mov{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.mov.on{opacity:1;pointer-events:all;}
+.mbox{background:#0f0f1f;border:1px solid var(--cb);border-radius:20px;padding:24px;width:100%;max-width:420px;transform:translateY(16px);transition:transform .25s;box-shadow:0 24px 60px rgba(0,0,0,0.6);}
+.mov.on .mbox{transform:translateY(0);}
+.mt{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:800;color:#fff;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.inp{width:100%;padding:10px 13px;border-radius:10px;font-size:13px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;transition:border-color .2s;margin-bottom:9px;}
+.inp:focus{border-color:var(--gold);}
+.inp::placeholder{color:var(--muted);}
+.sel{width:100%;padding:10px 13px;border-radius:10px;font-size:13px;background:#141428;border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;cursor:pointer;margin-bottom:9px;}
+.lbl{display:block;font-size:9px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+
+/* ═══ TOAST ═══ */
+#tw{position:fixed;bottom:76px;right:14px;z-index:9000;display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+.toast{padding:11px 16px;border-radius:11px;font-size:13px;font-weight:600;color:#fff;animation:toastPop .3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.5);max-width:280px;pointer-events:all;}
+.ts{background:linear-gradient(135deg,#166534,#22c55e);}
+.te{background:linear-gradient(135deg,#991b1b,#ef4444);}
+.ti{background:linear-gradient(135deg,#92400e,var(--gold));color:#000;}
+
+/* ═══ MOBILE NAV ═══ */
+.mnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:400;background:rgba(6,6,15,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--cb);padding:5px 0 max(10px,env(safe-area-inset-bottom));justify-content:space-around;}
+.mnv{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 10px;border:none;cursor:pointer;background:transparent;color:var(--sub);font-size:9px;font-weight:500;transition:color .2s;position:relative;}
+.mnv.on{color:var(--gold);}
+.mnv svg{transition:transform .2s;}
+.mnv.on svg{transform:scale(1.1);}
+
+/* ═══ EMPTY STATE ═══ */
+.empty{text-align:center;padding:42px 20px;}
+.ei-ico{font-size:36px;margin-bottom:10px;}
+.et{color:var(--sub);font-size:13px;}
+
+/* ═══ ADD FORM ═══ */
+.add-form{background:rgba(255,255,255,0.025);border-radius:13px;padding:14px;margin-top:10px;border:1px solid var(--cb);}
+.dzone{border:1px solid rgba(239,68,68,0.2);border-radius:13px;padding:16px;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;}
+.bg2{background:rgba(34,197,94,0.1);color:var(--green);}
+.br2{background:rgba(239,68,68,0.1);color:var(--red);}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .mnav{display:flex;}
+  .crow{grid-template-columns:1fr;}
+  .hstats{gap:12px;}
+  .main{padding:14px 11px 86px;}
+  .hdr{padding:0 13px;}
+}
+
+/* ═══ SETTINGS ROW ═══ */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--cb);}
+.sl{font-size:13px;font-weight:500;color:var(--text);}
+.ss{font-size:11px;color:var(--sub);margin-top:2px;}
+.st2{font-size:10px;color:var(--gold);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(212,175,55,0.08);}
+
+/* ═══ CONNECTION STATUS ═══ */
+#conn-status{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:500;font-size:11px;font-weight:600;padding:5px 14px;border-radius:99px;display:none;animation:fadeIn .3s ease;}
+.conn-ok{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.conn-err{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+</style>
+</head>
+<body>
+
+<!-- ══ SYNC BAR ══ -->
+<div id="sync"></div>
+
+<!-- ══ LOADING ══ -->
+<div id="loading">
+  <div class="ld-icon">💰</div>
+  <div class="ld-txt">A2DV Boys Fund</div>
+  <div class="spinner"></div>
+</div>
+
+<!-- ══ SETUP / LOGIN OVERLAY ══ -->
+<div id="setup-overlay" style="display:none;">
+  <div class="setup-float sf1"></div>
+  <div class="setup-float sf2"></div>
+  <div class="setup-card">
+
+    <div class="setup-logo">
+      <div class="setup-icon">💰</div>
+      <div class="setup-h1">A2DV Boys</div>
+      <div class="setup-sub">Fund Manager</div>
+    </div>
+
+    <!-- STEP 0: Choose mode -->
+    <div class="step active" id="step-0">
+      <div class="step-title">Welcome Back 👋</div>
+      <div class="step-desc">Sign in as admin to manage the fund, or view as a member.</div>
+      <div class="tab-row">
+        <button class="tab-b on" id="tb-admin" onclick="switchLoginTab('admin')">Admin Login</button>
+        <button class="tab-b" id="tb-view" onclick="switchLoginTab('viewer')">View Only</button>
+      </div>
+      <div id="admin-fields">
+        <label class="lbl" style="margin-bottom:4px;display:block;">Password</label>
+        <input class="fi" id="login-pass" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <div id="viewer-info" style="display:none;text-align:center;color:var(--sub);font-size:12px;margin-bottom:14px;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;line-height:1.6;">
+        You'll see all fund data in <strong style="color:var(--text)">read-only</strong> mode.<br/>No password needed.
+      </div>
+      <div id="login-err" class="err-box"></div>
+      <button class="btn-gold" id="login-btn" onclick="doLogin()">Sign In as Admin</button>
+      <p class="hint" id="first-time-hint" style="display:none;">
+        First time? <button onclick="goToSetup()" style="background:none;border:none;cursor:pointer;color:var(--gold);font-weight:600;font-size:11px;">Setup Firebase →</button>
+      </p>
+    </div>
+
+    <!-- STEP 1: Firebase setup instructions -->
+    <div class="step" id="step-1">
+      <div class="progress-steps">
+        <div class="ps done"></div><div class="ps"></div><div class="ps"></div>
+      </div>
+      <div class="step-title">Setup Firebase (Free)</div>
+      <div class="step-desc">Firebase is Google's free database — <strong style="color:var(--text)">free forever</strong>, no credit card needed. Follow these steps:</div>
+      <div class="link-box">
+        <strong>Step 1:</strong> Go to <strong><a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold)">console.firebase.google.com</a></strong><br/>
+        <strong>Step 2:</strong> Click <strong>"Create a project"</strong> → name it "a2dv-fund" → Continue<br/>
+        <strong>Step 3:</strong> Disable Google Analytics (not needed) → <strong>"Create project"</strong><br/>
+        <strong>Step 4:</strong> Click <strong>"Firestore Database"</strong> in left sidebar<br/>
+        <strong>Step 5:</strong> Click <strong>"Create database"</strong> → choose <strong>"Start in test mode"</strong> → pick any location → Enable<br/>
+        <strong>Step 6:</strong> Go to <strong>Project Settings</strong> (gear icon) → scroll down → click <strong>"&lt;/&gt; Web"</strong> → register app → copy the <strong>firebaseConfig</strong> object
+      </div>
+      <button class="btn-gold" onclick="goStep(2)">I have my Firebase config →</button>
+      <p class="hint">Takes about 3 minutes. It's completely free forever.</p>
+    </div>
+
+    <!-- STEP 2: Paste config -->
+    <div class="step" id="step-2">
+      <div class="progress-steps">
+        <div class="ps done"></div><div class="ps done"></div><div class="ps"></div>
+      </div>
+      <div class="step-title">Paste Firebase Config</div>
+      <div class="step-desc">Paste your firebaseConfig values below. They look like this:</div>
+      <div class="config-box">
+        apiKey: <span>"AIzaSy..."</span><br/>
+        authDomain: <span>"a2dv-fund.firebaseapp.com"</span><br/>
+        projectId: <span>"a2dv-fund"</span><br/>
+        ...
+      </div>
+      <label class="lbl">API Key</label>
+      <input class="fi" id="cfg-apiKey" placeholder="AIzaSy..."/>
+      <label class="lbl">Project ID</label>
+      <input class="fi" id="cfg-projectId" placeholder="a2dv-fund-xxxxx"/>
+      <label class="lbl">App ID</label>
+      <input class="fi" id="cfg-appId" placeholder="1:123:web:abc..."/>
+      <div id="cfg-err" class="err-box"></div>
+      <button class="btn-gold" id="cfg-btn" onclick="saveFirebaseConfig()">Connect to Firebase →</button>
+      <p class="hint"><button onclick="goStep(1)" style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:11px;">← Back</button></p>
+    </div>
+
+    <!-- STEP 3: Set admin password -->
+    <div class="step" id="step-3">
+      <div class="progress-steps">
+        <div class="ps done"></div><div class="ps done"></div><div class="ps done"></div>
+      </div>
+      <div class="step-title">Set Admin Password 🔐</div>
+      <div class="step-desc">Choose a password for admin access. Members can view without a password.</div>
+      <label class="lbl">Admin Password</label>
+      <input class="fi" id="setup-pass" type="password" placeholder="e.g. a2dv2024"/>
+      <label class="lbl">Confirm Password</label>
+      <input class="fi" id="setup-pass2" type="password" placeholder="Repeat password" onkeydown="if(event.key==='Enter')completeSetup()"/>
+      <div id="setup-err" class="err-box"></div>
+      <button class="btn-gold" id="setup-btn" onclick="completeSetup()">🚀 Launch App!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <header class="hdr">
+    <div class="hdr-logo">
+      <div class="hdr-ico">💰</div>
+      <div>
+        <div class="hdr-name">A2DV Boys</div>
+        <div class="hdr-tag">Fund Manager</div>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <div id="notif-wrap" style="display:none;position:relative;">
+        <button class="ico-btn" onclick="navigate('members')">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="ndot"></span>
+        </button>
+      </div>
+      <button class="ico-btn" onclick="syncAll(true)" title="Refresh">
+        <svg id="ri" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+      <button class="ico-btn" onclick="toggleTheme()" title="Theme">
+        <svg id="thi" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <span id="rbadge" class="rbadge"></span>
+      <button class="ico-btn" onclick="doLogout()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <button class="nv on" data-pg="dashboard" onclick="navigate('dashboard')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Dashboard
+      </button>
+      <button class="nv" data-pg="members" onclick="navigate('members')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Members
+        <span class="nvb" id="nv-b" style="display:none"></span>
+      </button>
+      <button class="nv" data-pg="expenses" onclick="navigate('expenses')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/></svg>
+        Expenses
+      </button>
+      <button class="nv" data-pg="history" onclick="navigate('history')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        History
+      </button>
+      <button class="nv" data-pg="milestones" onclick="navigate('milestones')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M7 5a5 5 0 0 0 10 0"/></svg>
+        Goals
+      </button>
+      <button class="nv" data-pg="settings" id="sb-s" style="display:none;" onclick="navigate('settings')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.1 19.1l-1.4-1.4M19.1 4.9l-1.4 1.4M4.9 4.9l1.4 1.4M4.9 19.1l1.4-1.4M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <div class="pg on" id="pg-dashboard">
+        <div class="hero">
+          <div class="live-pill"><span class="live-dot"></span>LIVE</div>
+          <div class="bal-l">Total Fund Balance</div>
+          <div class="bal-v" id="h-bal"><span>₹0</span></div>
+          <div class="bal-s" id="h-st"></div>
+          <div class="hstats">
+            <div><div class="hs-l">Total Income</div><div class="hs-v" id="h-inc" style="color:#86efac">₹0</div></div>
+            <div><div class="hs-l">Total Spent</div><div class="hs-v" id="h-sp" style="color:#fca5a5">₹0</div></div>
+            <div><div class="hs-l">This Month</div><div class="hs-v" id="h-mo" style="color:#fde68a">—</div></div>
+            <div><div class="hs-l">Members</div><div class="hs-v" id="h-mem" style="color:#c4b5fd">4</div></div>
+          </div>
+        </div>
+        <div class="sgrid">
+          <div class="card chov sc"><div class="sc-i">💳</div><div class="sc-v" id="sc1" style="color:var(--gold)">₹0</div><div class="sc-l">Monthly Target</div></div>
+          <div class="card chov sc"><div class="sc-i">✅</div><div class="sc-v" id="sc2" style="color:var(--green)">0</div><div class="sc-l">Paid This Month</div></div>
+          <div class="card chov sc"><div class="sc-i">⏳</div><div class="sc-v" id="sc3" style="color:var(--red)">0</div><div class="sc-l">Pending</div></div>
+          <div class="card chov sc"><div class="sc-i">📦</div><div class="sc-v" id="sc4" style="color:#60a5fa">0</div><div class="sc-l">Total Expenses</div></div>
+        </div>
+        <div class="crow">
+          <div class="card"><div class="st">Monthly Income</div><div class="cbars" id="ci"></div></div>
+          <div class="card"><div class="st">Monthly Expenses</div><div class="cbars" id="ce"></div></div>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div class="st" style="margin:0">This Month</div>
+            <button onclick="navigate('members')" style="font-size:11px;color:var(--gold);background:none;border:none;cursor:pointer;font-weight:600;">View All →</button>
+          </div>
+          <div id="d-ml"></div>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="pg" id="pg-members">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;color:#fff;">Members</h2>
+            <p style="font-size:11px;color:var(--sub);margin-top:3px;" id="m-sub"></p>
+          </div>
+        </div>
+        <div class="ml" id="m-list"><div class="empty"><div class="spinner"></div></div></div>
+        <div id="add-mem-s" style="display:none;">
+          <div class="add-form">
+            <div class="st">Add New Member</div>
+            <div style="display:flex;gap:8px;">
+              <input class="inp" id="new-mem" placeholder="Member name" style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')addMember()"/>
+              <button class="btn bp bsm" onclick="addMember()">+ Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="pg" id="pg-expenses">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;color:#fff;">Expenses</h2>
+            <p style="font-size:11px;color:var(--sub);margin-top:3px;" id="e-sub">All withdrawals</p>
+          </div>
+          <button class="btn bp bsm" id="add-e-btn" style="display:none;" onclick="openExpModal()">+ Add</button>
+        </div>
+        <div class="el" id="e-list"></div>
+        <div class="empty" id="e-empty" style="display:none;"><div class="ei-ico">💰</div><div class="et">No expenses yet!</div></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="pg" id="pg-history">
+        <div style="margin-bottom:16px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;color:#fff;">History</h2>
+          <p style="font-size:11px;color:var(--sub);margin-top:3px;">Full ledger with running balance</p>
+        </div>
+        <div class="tl" id="tx-list"></div>
+        <div class="empty" id="tx-empty" style="display:none;"><div class="ei-ico">📋</div><div class="et">No transactions yet.</div></div>
+      </div>
+
+      <!-- MILESTONES -->
+      <div class="pg" id="pg-milestones">
+        <div style="margin-bottom:16px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;color:#fff;">Goals 🎯</h2>
+          <p style="font-size:11px;color:var(--sub);margin-top:3px;">Track savings milestones</p>
+        </div>
+        <div class="card" style="text-align:center;padding:24px;margin-bottom:14px;">
+          <div style="font-size:9px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Next Milestone</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:800;color:var(--gold);" id="ms-n">₹0</div>
+          <div style="font-size:12px;color:var(--sub);margin:8px 0;" id="ms-t"></div>
+          <div class="pbar"><div class="pfill" id="ms-f" style="background:linear-gradient(135deg,var(--gold),var(--gold-l));width:0%;"></div></div>
+          <div style="font-size:11px;color:var(--sub);margin-top:8px;" id="ms-r"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;" id="ms-list"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="pg" id="pg-settings">
+        <div style="margin-bottom:16px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;color:#fff;">Settings ⚙️</h2>
+        </div>
+        <div class="card" style="margin-bottom:11px;">
+          <div class="st2">Monthly Contribution</div>
+          <div class="srow">
+            <div><div class="sl">Amount per member</div><div class="ss" id="curr-amt">₹200 / month</div></div>
+            <button class="btn bg bxs" onclick="openAmtModal()">Edit</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:11px;">
+          <div class="st2">Share App</div>
+          <div class="srow">
+            <div><div class="sl">App Link</div><div class="ss">Anyone can view the fund</div></div>
+            <button class="btn bg bxs" onclick="shareApp()">Copy Link</button>
+          </div>
+          <div class="srow" style="border-bottom:none;">
+            <div><div class="sl">Export Data</div><div class="ss">Download JSON backup</div></div>
+            <button class="btn bg bxs" onclick="exportData()">Export</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:11px;">
+          <div class="st2">Change Admin Password</div>
+          <div class="srow" style="border-bottom:none;">
+            <div><div class="sl">Password</div><div class="ss">Update admin access password</div></div>
+            <button class="btn bg bxs" onclick="openPwModal()">Change</button>
+          </div>
+        </div>
+        <div class="dzone">
+          <div class="st2" style="color:var(--red);border-color:rgba(239,68,68,0.12);">Danger Zone</div>
+          <div id="rc" style="display:none;margin-bottom:11px;">
+            <p style="font-size:12px;color:var(--sub);margin-bottom:10px;">Erases ALL contributions and expenses. <strong style="color:var(--red)">Cannot be undone.</strong></p>
+            <div style="display:flex;gap:7px;"><button class="btn bd bsm" onclick="doReset()">Yes, Reset All</button><button class="btn bg bsm" onclick="document.getElementById('rc').style.display='none'">Cancel</button></div>
+          </div>
+          <button class="btn bd bsm" onclick="document.getElementById('rc').style.display='block'">🗑 Reset All Fund Data</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MOBILE NAV -->
+  <nav class="mnav">
+    <button class="mnv on" data-pg="dashboard" onclick="navigate('dashboard')">
+      <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
+    </button>
+    <button class="mnv" data-pg="members" onclick="navigate('members')" style="position:relative;">
+      <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Members
+      <span id="mob-b" style="position:absolute;top:2px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;display:none;"></span>
+    </button>
+    <button class="mnv" data-pg="expenses" onclick="navigate('expenses')">
+      <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/></svg>Expenses
+    </button>
+    <button class="mnv" data-pg="history" onclick="navigate('history')">
+      <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>History
+    </button>
+    <button class="mnv" data-pg="milestones" onclick="navigate('milestones')">
+      <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M7 5a5 5 0 0 0 10 0"/></svg>Goals
+    </button>
+    <button class="mnv" data-pg="settings" id="mob-s" style="display:none;" onclick="navigate('settings')">
+      <svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.1 19.1l-1.4-1.4M19.1 4.9l-1.4 1.4M4.9 4.9l1.4 1.4M4.9 19.1l1.4-1.4M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>Settings
+    </button>
+  </nav>
+</div>
+
+<!-- MODALS -->
+<div class="mov" id="exp-modal">
+  <div class="mbox">
+    <div class="mt">Add Expense <button class="ico-btn" onclick="closeModal('exp-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Description</label><input class="inp" id="ex-d" placeholder="What was spent?"/>
+    <label class="lbl">Amount (₹)</label><input class="inp" type="number" id="ex-a" placeholder="0"/>
+    <label class="lbl">Category</label>
+    <select class="sel" id="ex-c"><option>General</option><option>Food</option><option>Travel</option><option>Entertainment</option><option>Emergency</option><option>Other</option></select>
+    <label class="lbl">Date</label><input class="inp" type="date" id="ex-dt"/>
+    <div style="display:flex;gap:8px;margin-top:13px;">
+      <button class="btn bp" style="flex:1;" id="sv-exp" onclick="saveExpense()">Record Expense</button>
+      <button class="btn bg" onclick="closeModal('exp-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="mov" id="amt-modal">
+  <div class="mbox">
+    <div class="mt">Monthly Amount <button class="ico-btn" onclick="closeModal('amt-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Amount per member / month</label>
+    <input class="inp" type="number" id="new-amt"/>
+    <p style="font-size:12px;color:var(--sub);margin-bottom:13px;">⚠️ Updates calculation for all months.</p>
+    <div style="display:flex;gap:8px;"><button class="btn bp" style="flex:1;" onclick="saveAmt()">Save</button><button class="btn bg" onclick="closeModal('amt-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="mov" id="edit-mem-modal">
+  <div class="mbox">
+    <div class="mt">Edit Member <button class="ico-btn" onclick="closeModal('edit-mem-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <input type="hidden" id="em-id"/>
+    <label class="lbl">Name</label><input class="inp" id="em-name" onkeydown="if(event.key==='Enter')saveEditMem()"/>
+    <div style="display:flex;gap:8px;margin-top:13px;"><button class="btn bp" style="flex:1;" onclick="saveEditMem()">Save</button><button class="btn bg" onclick="closeModal('edit-mem-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="mov" id="pw-modal">
+  <div class="mbox">
+    <div class="mt">Change Password <button class="ico-btn" onclick="closeModal('pw-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">New Password</label><input class="inp" type="password" id="new-pw"/>
+    <label class="lbl">Confirm</label><input class="inp" type="password" id="new-pw2"/>
+    <div id="pw-err" class="err-box" style="margin-top:5px;"></div>
+    <div style="display:flex;gap:8px;margin-top:13px;"><button class="btn bp" style="flex:1;" onclick="changePassword()">Save</button><button class="btn bg" onclick="closeModal('pw-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<div id="tw"></div>
+<div id="conn-status"></div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc,
+  deleteDoc, onSnapshot, serverTimestamp, query, orderBy
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ═══════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MILESTONES = [1000,5000,10000,25000,50000,100000];
+const CAT_EMOJI = {General:'💸',Food:'🍽️',Travel:'✈️',Entertainment:'🎉',Emergency:'🚨',Other:'📦'};
+const CAT_COLOR = {General:'var(--gold)',Food:'#f59e0b',Travel:'#3b82f6',Entertainment:'#8b5cf6',Emergency:'#ef4444',Other:'#6b7280'};
+const LS = localStorage;
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let db = null;
+let ROLE = null;
+let CP = 'dashboard'; // current page
+let UNSUBS = []; // firestore listeners
+let DATA = { members:[], contributions:{}, expenses:[], settings:{monthly_amount:200,admin_password:'a2dv2024'} };
+
+const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
+const fmtDate = d => { try { return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); } catch { return d; }};
+const nowKey = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; };
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+const syncShow = on => document.getElementById('sync').style.display = on?'block':'none';
+
+// ═══════════════════════════════════════════
+// FIREBASE INIT
+// ═══════════════════════════════════════════
+function initFirebase(config) {
+  try {
+    const app = initializeApp(config);
+    db = getFirestore(app);
+    return true;
+  } catch(e) { console.error(e); return false; }
+}
+
+async function testFirebaseConnection() {
+  try {
+    const ref = doc(db, 'settings', 'config');
+    await getDoc(ref);
+    return true;
+  } catch(e) { return false; }
+}
+
+// ═══════════════════════════════════════════
+// SETUP FLOW
+// ═══════════════════════════════════════════
+let loginMode = 'admin';
+window.switchLoginTab = (mode) => {
+  loginMode = mode;
+  document.getElementById('tb-admin').classList.toggle('on', mode==='admin');
+  document.getElementById('tb-view').classList.toggle('on', mode==='viewer');
+  document.getElementById('admin-fields').style.display = mode==='admin'?'block':'none';
+  document.getElementById('viewer-info').style.display = mode==='viewer'?'block':'none';
+  document.getElementById('login-btn').textContent = mode==='admin'?'Sign In as Admin':'Continue as Viewer';
+  document.getElementById('login-err').style.display = 'none';
+};
+
+window.goToSetup = () => goStep(1);
+window.goStep = (n) => {
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step-'+n).classList.add('active');
+};
+
+window.saveFirebaseConfig = async () => {
+  const apiKey = document.getElementById('cfg-apiKey').value.trim();
+  const projectId = document.getElementById('cfg-projectId').value.trim();
+  const appId = document.getElementById('cfg-appId').value.trim();
+  const errEl = document.getElementById('cfg-err');
+  const btn = document.getElementById('cfg-btn');
+  if (!apiKey || !projectId || !appId) { errEl.style.display='block'; errEl.textContent='Fill all three fields'; return; }
+  errEl.style.display='none';
+  btn.disabled=true; btn.textContent='Connecting...';
+  const config = {
+    apiKey, projectId, appId,
+    authDomain: `${projectId}.firebaseapp.com`,
+    storageBucket: `${projectId}.appspot.com`,
+    messagingSenderId: '',
+  };
+  if (!initFirebase(config)) { errEl.style.display='block'; errEl.textContent='Invalid config — check values'; btn.disabled=false; btn.textContent='Connect to Firebase →'; return; }
+  const ok = await testFirebaseConnection();
+  if (!ok) { errEl.style.display='block'; errEl.textContent='Could not connect — check Project ID & enable Firestore'; btn.disabled=false; btn.textContent='Connect to Firebase →'; return; }
+  LS.setItem('a2dv_fb_config', JSON.stringify(config));
+  btn.disabled=false; btn.textContent='Connect to Firebase →';
+  goStep(3);
+};
+
+window.completeSetup = async () => {
+  const p1 = document.getElementById('setup-pass').value;
+  const p2 = document.getElementById('setup-pass2').value;
+  const errEl = document.getElementById('setup-err');
+  const btn = document.getElementById('setup-btn');
+  if (!p1 || p1.length < 4) { errEl.style.display='block'; errEl.textContent='Password must be at least 4 characters'; return; }
+  if (p1 !== p2) { errEl.style.display='block'; errEl.textContent='Passwords do not match'; return; }
+  errEl.style.display='none'; btn.disabled=true; btn.textContent='Setting up...';
+  try {
+    // Save settings to Firestore
+    await setDoc(doc(db,'settings','config'), { monthly_amount: 200, admin_password: p1, created_at: new Date().toISOString() });
+    // Seed initial members
+    const members = [{id:'m1',name:'Arun',avatar:'A',order:1},{id:'m2',name:'Dinesh',avatar:'D',order:2},{id:'m3',name:'Vijay',avatar:'V',order:3},{id:'m4',name:'Bala',avatar:'B',order:4}];
+    for (const m of members) await setDoc(doc(db,'members',m.id), {...m, active:true, created_at:new Date().toISOString()});
+    LS.setItem('a2dv_role','admin');
+    ROLE = 'admin';
+    await launchApp();
+  } catch(e) { errEl.style.display='block'; errEl.textContent='Error: '+e.message; btn.disabled=false; btn.textContent='🚀 Launch App!'; }
+};
+
+window.doLogin = async () => {
+  const btn = document.getElementById('login-btn');
+  const errEl = document.getElementById('login-err');
+  btn.disabled=true; btn.textContent='...'; errEl.style.display='none';
+  try {
+    if (loginMode === 'viewer') {
+      ROLE = 'viewer'; LS.setItem('a2dv_role','viewer');
+      await launchApp(); return;
+    }
+    const pw = document.getElementById('login-pass').value;
+    const cfgDoc = await getDoc(doc(db,'settings','config'));
+    if (!cfgDoc.exists()) { errEl.style.display='block'; errEl.textContent='App not set up yet'; return; }
+    const storedPw = cfgDoc.data().admin_password;
+    if (pw !== storedPw) { errEl.style.display='block'; errEl.textContent='Wrong password'; return; }
+    ROLE='admin'; LS.setItem('a2dv_role','admin');
+    await launchApp();
+  } catch(e) { errEl.style.display='block'; errEl.textContent='Error: '+e.message; }
+  finally { btn.disabled=false; btn.textContent = loginMode==='admin'?'Sign In as Admin':'Continue as Viewer'; }
+};
+
+// ═══════════════════════════════════════════
+// APP LAUNCH
+// ═══════════════════════════════════════════
+async function launchApp() {
+  document.getElementById('setup-overlay').style.display='none';
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('rbadge').textContent = ROLE==='admin'?'⚡ Admin':'👁 Viewer';
+  if (ROLE==='admin') {
+    ['sb-s','mob-s','add-e-btn','add-mem-s','notif-wrap'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.style.display=id==='add-mem-s'?'block':id==='notif-wrap'?'block':'';
+    });
+    document.getElementById('add-e-btn').style.display='';
+    document.getElementById('add-mem-s').style.display='block';
+    document.getElementById('sb-s').style.display='flex';
+    document.getElementById('mob-s').style.display='flex';
+  }
+  document.getElementById('ex-dt').value = new Date().toISOString().split('T')[0];
+  await loadAllData();
+  startListeners();
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').classList.add('on');
+  navigate('dashboard');
+  setInterval(()=>{ if(db) syncAll(false); }, 30000);
+}
+
+// ═══════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════
+async function loadAllData() {
+  syncShow(true);
+  try {
+    const [settingsDoc, membersSnap, contribSnap, expensesSnap] = await Promise.all([
+      getDoc(doc(db,'settings','config')),
+      getDocs(query(collection(db,'members'), orderBy('order'))),
+      getDocs(collection(db,'contributions')),
+      getDocs(query(collection(db,'expenses'), orderBy('expense_date','desc'))),
+    ]);
+    if (settingsDoc.exists()) DATA.settings = settingsDoc.data();
+    DATA.members = membersSnap.docs.filter(d=>d.data().active!==false).map(d=>({id:d.id,...d.data()}));
+    DATA.contributions = {};
+    contribSnap.docs.forEach(d=>{ const data=d.data(); if(!DATA.contributions[data.month_key]) DATA.contributions[data.month_key]={}; DATA.contributions[data.month_key][data.member_id]=data.paid; });
+    DATA.expenses = expensesSnap.docs.map(d=>({id:d.id,...d.data()}));
+  } catch(e) { console.error(e); toast('Sync error','e'); }
+  finally { syncShow(false); }
+}
+
+// Real-time listeners
+function startListeners() {
+  UNSUBS.forEach(u=>u());
+  UNSUBS = [
+    onSnapshot(doc(db,'settings','config'), snap=>{ if(snap.exists()){ DATA.settings=snap.data(); renderPage(CP); } }),
+    onSnapshot(collection(db,'members'), snap=>{ DATA.members=snap.docs.filter(d=>d.data().active!==false).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0)); renderPage(CP); }),
+    onSnapshot(collection(db,'contributions'), snap=>{ DATA.contributions={}; snap.docs.forEach(d=>{ const x=d.data(); if(!DATA.contributions[x.month_key]) DATA.contributions[x.month_key]={}; DATA.contributions[x.month_key][x.member_id]=x.paid; }); renderPage(CP); }),
+    onSnapshot(query(collection(db,'expenses'), orderBy('expense_date','desc')), snap=>{ DATA.expenses=snap.docs.map(d=>({id:d.id,...d.data()})); renderPage(CP); }),
+  ];
+}
+
+window.syncAll = async (showMsg=true) => {
+  const icon = document.getElementById('ri');
+  icon.style.animation='spin .7s linear infinite';
+  try { await loadAllData(); renderPage(CP); if(showMsg) toast('Data synced!','s'); }
+  catch(e) { toast('Sync failed','e'); }
+  finally { setTimeout(()=>icon.style.animation='',600); }
+};
+
+// ═══════════════════════════════════════════
+// COMPUTED
+// ═══════════════════════════════════════════
+function computeTotals() {
+  const monthly = parseFloat(DATA.settings?.monthly_amount||200);
+  let income=0;
+  Object.values(DATA.contributions).forEach(md=>Object.values(md).forEach(p=>{ if(p) income+=monthly; }));
+  const spent = DATA.expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  return { income, spent, balance: income-spent, monthly };
+}
+
+function getLast6() {
+  const { monthly } = computeTotals();
+  const now = new Date();
+  return Array.from({length:6},(_,i)=>{
+    const d = new Date(now.getFullYear(), now.getMonth()-5+i, 1);
+    const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const md = DATA.contributions[mk]||{};
+    const inc = Object.values(md).filter(Boolean).length * monthly;
+    const exp = DATA.expenses.filter(e=>e.expense_date?.startsWith(mk)).reduce((s,e)=>s+parseFloat(e.amount||0),0);
+    return { label:MONTHS[d.getMonth()], inc, exp };
+  });
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+window.navigate = (pg) => {
+  CP = pg;
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-'+pg).classList.add('on');
+  document.querySelectorAll('.nv,.mnv').forEach(b=>b.classList.toggle('on',b.dataset.pg===pg));
+  renderPage(pg);
+  window.scrollTo(0,0);
+};
+function renderPage(pg) {
+  if(pg==='dashboard') renderDashboard();
+  else if(pg==='members') renderMembers();
+  else if(pg==='expenses') renderExpenses();
+  else if(pg==='history') renderHistory();
+  else if(pg==='milestones') renderMilestones();
+  else if(pg==='settings') renderSettings();
+}
+
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard() {
+  const {income,spent,balance,monthly} = computeTotals();
+  const mk = nowKey();
+  const cmd = DATA.contributions[mk]||{};
+  const paid = DATA.members.filter(m=>cmd[m.id]).length;
+  const pending = DATA.members.length - paid;
+
+  document.getElementById('h-bal').innerHTML=`<span>${fmt(balance)}</span>`;
+  document.getElementById('h-st').innerHTML = balance>=0?`<span style="color:#86efac">▲ Fund is healthy</span>`:`<span style="color:#fca5a5">▼ Fund in deficit</span>`;
+  document.getElementById('h-inc').textContent=fmt(income);
+  document.getElementById('h-sp').textContent=fmt(spent);
+  document.getElementById('h-mo').textContent=`${paid}/${DATA.members.length} paid`;
+  document.getElementById('h-mem').textContent=DATA.members.length;
+  document.getElementById('sc1').textContent=fmt(DATA.members.length*monthly);
+  document.getElementById('sc2').textContent=paid;
+  document.getElementById('sc3').textContent=pending;
+  document.getElementById('sc4').textContent=DATA.expenses.length;
+
+  document.getElementById('nv-b').style.display=pending>0?'':'none';
+  document.getElementById('nv-b').textContent=pending;
+  document.getElementById('mob-b').style.display=pending>0&&ROLE==='admin'?'':'none';
+
+  const l6=getLast6();
+  renderBars('ci',l6.map(m=>({l:m.label,v:m.inc})),'var(--gold)');
+  renderBars('ce',l6.map(m=>({l:m.label,v:m.exp})),'var(--red)');
+
+  document.getElementById('d-ml').innerHTML=DATA.members.map(m=>{
+    const p=cmd[m.id];
+    return `<div style="display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,0.025);margin-bottom:5px;">
+      <div class="av ${p?'av-p':'av-u'}" style="width:33px;height:33px;font-size:12px;">${m.avatar}</div>
+      <span style="flex:1;font-weight:600;font-size:13px;">${m.name}</span>
+      <span style="font-size:12px;font-weight:700;color:${p?'var(--green)':'var(--red)'};">${p?fmt(monthly):'Pending'}</span>
+      <div style="width:7px;height:7px;border-radius:50%;background:${p?'var(--green)':'var(--red)'}"></div>
+    </div>`;
+  }).join('');
+}
+
+function renderBars(id,data,color) {
+  const el=document.getElementById(id); if(!el)return;
+  const max=Math.max(...data.map(d=>d.v),1);
+  el.innerHTML=data.map(d=>{
+    const h=max>0?(d.v/max)*74:0;
+    return `<div class="cb-w"><div class="cb-b" style="background:${color};height:${h}px;opacity:.8;"></div><div class="cb-l">${d.l}</div></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// MEMBERS
+// ═══════════════════════════════════════════
+function renderMembers() {
+  const {monthly} = computeTotals();
+  const mk=nowKey(), cmd=DATA.contributions[mk]||{};
+  const paid=DATA.members.filter(m=>cmd[m.id]).length;
+  document.getElementById('m-sub').textContent=`${DATA.members.length} members · ${fmt(monthly)}/month · ${DATA.members.length-paid} pending`;
+
+  if(!DATA.members.length) { document.getElementById('m-list').innerHTML='<div class="empty"><div class="ei-ico">👥</div><div class="et">No members</div></div>'; return; }
+  document.getElementById('m-list').innerHTML=DATA.members.map((m,i)=>{
+    const isPaid=cmd[m.id];
+    const totalPaid=Object.values(DATA.contributions).reduce((s,md)=>s+(md[m.id]?monthly:0),0);
+    const isA=ROLE==='admin';
+    return `<div class="card chov mc" style="animation:fadeUp ${0.05+i*.06}s ease;">
+      <div class="av ${isPaid?'av-p':'av-u'}">${m.avatar}</div>
+      <div class="mi"><div class="mn">${m.name}</div><div class="mt">Contributed: ${fmt(totalPaid)}</div></div>
+      <div class="ma">
+        ${isA
+          ?`<button class="pb ${isPaid?'pb-p':'pb-u'}" onclick="togglePay('${m.id}','${mk}')" id="pb-${m.id}">${isPaid?'✓ Paid':'Mark Paid'}</button>`
+          :`<span class="badge ${isPaid?'bg2':'br2'}">${isPaid?'✓ Paid':'Pending'}</span>`}
+        ${isA?`<div class="macts">
+          <button class="it" style="color:var(--sub)" onclick="openEditMem('${m.id}','${m.name}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          ${DATA.members.length>1?`<button class="it" style="color:var(--red)" onclick="removeMember('${m.id}','${m.name}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>`:''}
+        </div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.togglePay = async (memberId, monthKey) => {
+  if(ROLE!=='admin') return;
+  const btn=document.getElementById('pb-'+memberId); if(btn){btn.disabled=true;btn.textContent='...';}
+  try {
+    const cur = DATA.contributions[monthKey]?.[memberId];
+    const docId=`${monthKey}_${memberId}`;
+    await setDoc(doc(db,'contributions',docId),{member_id:memberId,month_key:monthKey,paid:!cur,updated_at:new Date().toISOString()});
+    const m=DATA.members.find(x=>x.id===memberId);
+    toast((!cur)?`${m?.name} marked paid ✓`:'Payment removed','i');
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+
+window.addMember = async () => {
+  const name=document.getElementById('new-mem').value.trim();
+  if(!name){toast('Enter a name','e');return;}
+  try {
+    const id=uid();
+    await setDoc(doc(db,'members',id),{name,avatar:name[0].toUpperCase(),order:DATA.members.length+1,active:true,created_at:new Date().toISOString()});
+    document.getElementById('new-mem').value='';
+    toast(`${name} added! 🎉`);
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+
+window.removeMember = async (id,name) => {
+  if(!confirm(`Remove ${name}?`)) return;
+  try { await updateDoc(doc(db,'members',id),{active:false}); toast(`${name} removed`,'e'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+
+window.openEditMem = (id,name) => { document.getElementById('em-id').value=id; document.getElementById('em-name').value=name; openModal('edit-mem-modal'); };
+window.saveEditMem = async () => {
+  const id=document.getElementById('em-id').value;
+  const name=document.getElementById('em-name').value.trim();
+  if(!name) return;
+  try { await updateDoc(doc(db,'members',id),{name,avatar:name[0].toUpperCase()}); closeModal('edit-mem-modal'); toast('Updated!'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ═══════════════════════════════════════════
+// EXPENSES
+// ═══════════════════════════════════════════
+function renderExpenses() {
+  const total=DATA.expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  document.getElementById('e-sub').textContent=`${DATA.expenses.length} records · Total: ${fmt(total)}`;
+  const el=document.getElementById('e-list'), empty=document.getElementById('e-empty');
+  if(!DATA.expenses.length){el.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  el.innerHTML=DATA.expenses.map((e,i)=>{
+    const cc=CAT_COLOR[e.category]||'var(--gold)', em=CAT_EMOJI[e.category]||'💸';
+    return `<div class="card chov ec" style="animation:fadeUp ${0.04+i*.04}s ease;">
+      <div style="width:37px;height:37px;border-radius:11px;background:${cc}18;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${em}</div>
+      <div class="ei"><div class="ed">${e.description}</div><div class="em">${fmtDate(e.expense_date)} · <span style="color:${cc};font-weight:600">${e.category||'General'}</span></div></div>
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div class="ea">−${fmt(e.amount)}</div>
+        ${ROLE==='admin'?`<button class="it" style="color:var(--red);opacity:.7;" onclick="delExpense('${e.id}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.openExpModal = () => { document.getElementById('ex-d').value=''; document.getElementById('ex-a').value=''; document.getElementById('ex-c').value='General'; document.getElementById('ex-dt').value=new Date().toISOString().split('T')[0]; openModal('exp-modal'); };
+window.saveExpense = async () => {
+  const desc=document.getElementById('ex-d').value.trim(), amt=+document.getElementById('ex-a').value;
+  const cat=document.getElementById('ex-c').value, dt=document.getElementById('ex-dt').value;
+  if(!desc||!amt||amt<=0||!dt){toast('Fill all fields','e');return;}
+  const {balance}=computeTotals();
+  if(amt>balance&&!confirm(`⚠️ Exceeds balance (${fmt(balance)}). Continue?`)) return;
+  const btn=document.getElementById('sv-exp'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    const id=uid();
+    await setDoc(doc(db,'expenses',id),{description:desc,amount:amt,category:cat,expense_date:dt,created_at:new Date().toISOString()});
+    closeModal('exp-modal'); toast(`${fmt(amt)} recorded!`);
+  } catch(e){toast('Error: '+e.message,'e');}
+  finally{btn.disabled=false;btn.textContent='Record Expense';}
+};
+window.delExpense = async (id) => {
+  if(!confirm('Delete this expense?')) return;
+  try { await deleteDoc(doc(db,'expenses',id)); toast('Deleted','e'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ═══════════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════════
+function renderHistory() {
+  const {monthly,balance}=computeTotals();
+  const events=[];
+  Object.entries(DATA.contributions).forEach(([mk,md])=>{
+    const [yr,mo]=mk.split('-');
+    Object.entries(md).forEach(([mid,paid])=>{
+      if(paid){ const m=DATA.members.find(x=>x.id===mid); events.push({type:'in',desc:`${m?.name||'Member'} — ${MONTHS[parseInt(mo)-1]} ${yr}`,amt:monthly,date:`${mk}-01`}); }
+    });
+  });
+  DATA.expenses.forEach(e=>events.push({type:'out',desc:e.description,amt:parseFloat(e.amount||0),date:e.expense_date}));
+  events.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  let run=balance;
+  const withR=events.map(e=>{const r=run; run-=(e.type==='in'?e.amt:-e.amt); return{...e,run:r};});
+  const el=document.getElementById('tx-list'), empty=document.getElementById('tx-empty');
+  if(!withR.length){el.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  el.innerHTML=withR.map((e,i)=>`
+    <div class="card chov tc" style="animation:fadeUp ${0.02+i*.025}s ease;">
+      <div style="color:${e.type==='in'?'var(--green)':'var(--red)'};">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          ${e.type==='in'?'<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>'
+          :'<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'}
+        </svg>
+      </div>
+      <div class="ti"><div class="td">${e.desc}</div><div class="tdt">${fmtDate(e.date)}</div></div>
+      <div class="tr">
+        <div class="ta" style="color:${e.type==='in'?'var(--green)':'var(--red)'};">${e.type==='in'?'+':'-'}${fmt(e.amt)}</div>
+        <div class="tb">Bal: ${fmt(e.run)}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// MILESTONES
+// ═══════════════════════════════════════════
+function renderMilestones() {
+  const {balance}=computeTotals();
+  const next=MILESTONES.find(m=>m>balance)||MILESTONES[MILESTONES.length-1];
+  const prev=MILESTONES.slice().reverse().find(m=>m<=balance)||0;
+  const pct=next>prev?Math.min(((balance-prev)/(next-prev))*100,100):100;
+  document.getElementById('ms-n').textContent=fmt(next);
+  document.getElementById('ms-t').textContent=`${fmt(Math.max(balance,0))} / ${fmt(next)} — ${pct.toFixed(1)}% there!`;
+  document.getElementById('ms-f').style.width=pct+'%';
+  document.getElementById('ms-r').textContent=`${fmt(Math.max(next-balance,0))} more to go`;
+  const emojis=['🌱','💪','🏆','🚀','💎','👑'];
+  document.getElementById('ms-list').innerHTML=MILESTONES.map((m,i)=>{
+    const done=balance>=m, isCur=m===next, p=isCur&&next>prev?pct:0;
+    return `<div class="card chov mscard" style="opacity:${done?1:.62};${isCur?'border-color:rgba(212,175,55,0.35);':''};animation:fadeUp ${0.05+i*.06}s ease;">
+      <div class="msi">
+        <div class="ms-ico" style="background:${done?'linear-gradient(135deg,var(--gold),var(--gold-l))':'rgba(255,255,255,0.05)'};">${done?emojis[i]:'🔒'}</div>
+        <div style="flex:1;">
+          <div class="ms-nm" style="color:${done?'var(--gold)':'var(--text)'}">${fmt(m)}</div>
+          <div class="ms-sb">${done?'✅ Achieved!':isCur?`${pct.toFixed(0)}% complete`:'Locked'}</div>
+          ${isCur?`<div class="pbar" style="margin-top:7px;"><div class="pfill" style="background:linear-gradient(135deg,var(--gold),var(--gold-l));width:${p}%;"></div></div>`:''}
+        </div>
+        ${done?'<div style="font-size:19px;">🏆</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function renderSettings() {
+  document.getElementById('curr-amt').textContent=`Currently ${fmt(DATA.settings?.monthly_amount||200)} / month`;
+}
+window.openAmtModal = () => { document.getElementById('new-amt').value=DATA.settings?.monthly_amount||200; openModal('amt-modal'); };
+window.saveAmt = async () => {
+  const v=+document.getElementById('new-amt').value;
+  if(!v||v<=0){toast('Enter valid amount','e');return;}
+  try { await updateDoc(doc(db,'settings','config'),{monthly_amount:v}); closeModal('amt-modal'); toast(`Monthly amount set to ${fmt(v)}!`); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.openPwModal = () => { document.getElementById('new-pw').value=''; document.getElementById('new-pw2').value=''; document.getElementById('pw-err').style.display='none'; openModal('pw-modal'); };
+window.changePassword = async () => {
+  const p1=document.getElementById('new-pw').value, p2=document.getElementById('new-pw2').value;
+  const errEl=document.getElementById('pw-err');
+  if(!p1||p1.length<4){errEl.style.display='block';errEl.textContent='Min 4 characters';return;}
+  if(p1!==p2){errEl.style.display='block';errEl.textContent='Passwords do not match';return;}
+  try { await updateDoc(doc(db,'settings','config'),{admin_password:p1}); closeModal('pw-modal'); toast('Password changed!'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.shareApp = () => {
+  const url=window.location.href;
+  if(navigator.clipboard) navigator.clipboard.writeText(url).then(()=>toast('Link copied! Share it with the boys 🔗')).catch(()=>prompt('Share:',url));
+  else prompt('Share this link:',url);
+};
+window.exportData = () => {
+  const data={exported:new Date().toISOString(),settings:DATA.settings,members:DATA.members,contributions:DATA.contributions,expenses:DATA.expenses};
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})); a.download=`a2dv-backup-${new Date().toISOString().split('T')[0]}.json`; a.click();
+  toast('Backup downloaded! 📥');
+};
+window.doReset = async () => {
+  try {
+    const [cs,es]=await Promise.all([getDocs(collection(db,'contributions')),getDocs(collection(db,'expenses'))]);
+    await Promise.all([...cs.docs.map(d=>deleteDoc(d.ref)),...es.docs.map(d=>deleteDoc(d.ref))]);
+    document.getElementById('rc').style.display='none'; toast('All data reset','e');
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ═══════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════
+window.openModal = id=>document.getElementById(id).classList.add('on');
+window.closeModal = id=>document.getElementById(id).classList.remove('on');
+document.querySelectorAll('.mov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on');}));
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+window.toast = (msg,type='s')=>{
+  const w=document.getElementById('tw');
+  const t=document.createElement('div');
+  t.className=`toast t${type}`;t.textContent=msg;w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2800);
+};
+
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+let isLight=false;
+window.toggleTheme=()=>{
+  isLight=!isLight;const r=document.documentElement;
+  if(isLight){r.style.setProperty('--bg','#f0f2ff');r.style.setProperty('--card','rgba(0,0,0,0.04)');r.style.setProperty('--cb','rgba(0,0,0,0.08)');r.style.setProperty('--text','#1a1a3e');r.style.setProperty('--sub','#7070a0');r.style.setProperty('--muted','#b0b0cc');document.body.style.background='#f0f2ff';}
+  else{r.style.setProperty('--bg','#06060f');r.style.setProperty('--card','rgba(255,255,255,0.038)');r.style.setProperty('--cb','rgba(255,255,255,0.065)');r.style.setProperty('--text','#eaeaf6');r.style.setProperty('--sub','#5c5c80');r.style.setProperty('--muted','#2e2e50');document.body.style.background='#06060f';}
+};
+
+// ═══════════════════════════════════════════
+// LOGOUT
+// ═══════════════════════════════════════════
+window.doLogout=()=>{
+  UNSUBS.forEach(u=>u()); UNSUBS=[];
+  ROLE=null; LS.removeItem('a2dv_role');
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('setup-overlay').style.display='flex';
+  document.getElementById('login-pass').value='';
+  goStep(0);
+};
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+async function init() {
+  const savedConfig = LS.getItem('a2dv_fb_config');
+  const savedRole = LS.getItem('a2dv_role');
+
+  if (!savedConfig) {
+    // First time — show setup
+    document.getElementById('loading').style.display='none';
+    document.getElementById('setup-overlay').style.display='flex';
+    document.getElementById('first-time-hint').style.display='block';
+    goStep(0);
+    return;
+  }
+
+  // Config exists — init Firebase
+  const config = JSON.parse(savedConfig);
+  if (!initFirebase(config)) {
+    document.getElementById('loading').style.display='none';
+    document.getElementById('setup-overlay').style.display='flex';
+    toast('Firebase config error','e');
+    goStep(0);
+    return;
+  }
+
+  // Check if Firestore is set up
+  const ok = await testFirebaseConnection();
+  if (!ok) {
+    document.getElementById('loading').style.display='none';
+    document.getElementById('setup-overlay').style.display='flex';
+    goStep(0);
+    return;
+  }
+
+  // Auto-login if session saved
+  if (savedRole) {
+    ROLE = savedRole;
+    await launchApp();
+    return;
+  }
+
+  // Show login
+  document.getElementById('loading').style.display='none';
+  document.getElementById('setup-overlay').style.display='flex';
+  goStep(0);
+}
+
+window.addEventListener('load', ()=>setTimeout(init, 600));
+</script>
+</body>
+</html>
