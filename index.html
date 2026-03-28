@@ -2,1153 +2,1600 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>A2DV Boys Fund Manager</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#06060f"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>A2DV Boys Fund</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07090f;--bg2:#0d1117;--bg3:#131a24;
-  --card:#111827;--card2:#1a2336;--card3:#1e2a3d;
-  --border:#1f2d42;--border2:#263347;
-  --g1:#3b82f6;--g2:#60a5fa;--g3:#93c5fd;
-  --g-dim:#1e3a5f;--g-glow:rgba(59,130,246,0.15);
-  --gold:#f0b429;--gold2:#fbbf24;
-  --green:#10b981;--green2:#34d399;
-  --red:#ef4444;--red2:#f87171;
-  --purple:#a78bfa;--orange:#fb923c;
-  --text:#e8eaf0;--text2:#7a9bbf;--text3:#2e4a6e;
-  --radius:16px;
+/* ══════════════════════════════════════
+   ROOT VARIABLES
+══════════════════════════════════════ */
+:root {
+  --gold:#D4AF37; --gold-l:#F5D060; --gold-dim:rgba(212,175,55,0.13); --gold-glow:rgba(212,175,55,0.35);
+  --bg:#06060f; --bg2:#0c0c1a; --bg3:#121226;
+  --card:rgba(255,255,255,0.038); --cb:rgba(255,255,255,0.07);
+  --text:#eaeaf6; --sub:#5c5c80; --muted:#2e2e50;
+  --green:#22c55e; --red:#ef4444; --blue:#3b82f6; --purple:#a78bfa;
+  --radius:16px; --radius-lg:22px;
 }
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-h1,h2,h3,h4{font-family:'Syne',sans-serif}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
-.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
-.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.w-full{width:100%}
-.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}
-.mt-2{margin-top:8px}.mt-4{margin-top:16px}
-.text-sm{font-size:13px}.text-xs{font-size:11px}
-.font-bold{font-weight:700}.font-semibold{font-weight:600}
-.rounded{border-radius:var(--radius)}.cursor-pointer{cursor:pointer}
-.card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border2);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;transition:all .2s}
-.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,130,246,0.03),transparent 60%);pointer-events:none}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s;outline:none}
-.btn-primary{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;font-weight:700}
-.btn-primary:hover{filter:brightness(1.1);box-shadow:0 4px 20px rgba(59,130,246,0.4)}
-.btn-ghost{background:rgba(255,255,255,0.04);color:var(--text2);border:1px solid var(--border2)}
-.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text)}
-.btn-danger{background:rgba(239,68,68,0.1);color:var(--red2);border:1px solid rgba(239,68,68,0.2)}
-.btn-danger:hover{background:rgba(239,68,68,0.2)}
-.btn-success{background:rgba(16,185,129,0.1);color:var(--green2);border:1px solid rgba(16,185,129,0.2)}
-.btn-success:hover{background:rgba(16,185,129,0.2)}
-.btn-gold{background:rgba(240,180,41,0.1);color:var(--gold);border:1px solid rgba(240,180,41,0.2)}
-.btn-gold:hover{background:rgba(240,180,41,0.2)}
-.btn-purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
-.btn-purple:hover{background:rgba(167,139,250,0.2)}
-.btn-orange{background:rgba(251,146,60,0.1);color:var(--orange);border:1px solid rgba(251,146,60,0.2)}
-.btn-orange:hover{background:rgba(251,146,60,0.2)}
-.btn-sm{padding:6px 12px;font-size:12px;border-radius:10px}
-.btn-icon{padding:8px;border-radius:10px;width:36px;height:36px}
-.input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .18s}
-.input:focus{border-color:var(--g1);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
-.input::placeholder{color:var(--text3)}
-.label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.06em}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.badge-blue{background:rgba(59,130,246,0.12);color:var(--g2);border:1px solid rgba(59,130,246,0.2)}
-.badge-green{background:rgba(16,185,129,0.12);color:var(--green2);border:1px solid rgba(16,185,129,0.2)}
-.badge-red{background:rgba(239,68,68,0.12);color:var(--red2);border:1px solid rgba(239,68,68,0.2)}
-.badge-gold{background:rgba(240,180,41,0.1);color:var(--gold);border:1px solid rgba(240,180,41,0.2)}
-.badge-purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
-.badge-orange{background:rgba(251,146,60,0.1);color:var(--orange);border:1px solid rgba(251,146,60,0.2)}
-.progress-wrap{background:rgba(255,255,255,0.06);border-radius:99px;height:6px;overflow:hidden}
-.progress-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--g1),var(--g2));transition:width .6s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(59,130,246,0.4)}
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,9,15,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;background:linear-gradient(90deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}
-.sidebar{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;position:fixed;top:62px;left:0;bottom:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
-.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .15s;border:none;background:transparent;font-family:'DM Sans',sans-serif;width:100%;text-align:left}
-.sidebar-item:hover{background:rgba(59,130,246,0.06);color:var(--text)}
-.sidebar-item.active{background:rgba(59,130,246,0.12);color:var(--g2);border:1px solid rgba(59,130,246,0.2)}
-.sidebar-item .s-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.sidebar-item.active .s-icon{background:rgba(59,130,246,0.15)}
-.main{flex:1;margin-left:230px;padding:28px;min-height:calc(100vh - 62px);width:calc(100% - 230px)}
-.login-wrap{min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow-y:auto;overflow-x:hidden;padding:24px 16px}
-.login-orb1{position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%);pointer-events:none}
-.login-orb2{position:absolute;bottom:-150px;left:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.07),transparent 70%);pointer-events:none}
-.login-card{position:relative;z-index:1;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border2);border-radius:24px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.6)}
-.stat-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border2);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;transition:all .2s}
-.stat-card:hover{border-color:var(--g-dim);box-shadow:0 8px 32px var(--g-glow)}
-.stat-value{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1;margin:8px 0 4px}
-.stat-label{font-size:11px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-.stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
-.avatar{border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--card3);font-size:20px;font-family:'Syne',sans-serif;font-weight:800;position:relative}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.tx-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.tx-row:last-child{border-bottom:none}
-.tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.hero-balance{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(37,99,235,0.04));border:1px solid rgba(59,130,246,0.2);border-radius:22px;padding:28px;position:relative;overflow:hidden;margin-bottom:24px}
-.hero-balance::before{content:'';position:absolute;top:-60px;right:-60px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.15),transparent 70%);pointer-events:none}
-.hero-amount{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;background:linear-gradient(90deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.chart-wrap{position:relative;height:150px;margin-top:8px}
-.chart-bars{display:flex;align-items:flex-end;gap:6px;height:100%;padding-bottom:22px}
-.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
-.chart-bar{width:100%;border-radius:6px 6px 0 0;min-height:4px;transition:height .6s cubic-bezier(.4,0,.2,1);position:relative}
-.chart-label{font-size:10px;color:var(--text3);position:absolute;bottom:-18px;white-space:nowrap;left:50%;transform:translateX(-50%)}
-.milestone{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,0.02);border-radius:12px;border:1px solid var(--border);margin-bottom:8px;transition:all .2s}
-.milestone.done{border-color:rgba(59,130,246,0.25);background:rgba(59,130,246,0.04)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border2);border-radius:22px;padding:26px;width:100%;max-width:460px;box-shadow:0 24px 80px rgba(0,0,0,0.7);animation:fadeUp .22s ease;max-height:90vh;overflow-y:auto}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(7,9,15,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border2);padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:100;gap:2px}
-.bottom-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;border-radius:10px;cursor:pointer;color:var(--text3);font-size:9px;font-weight:600;transition:all .15s;border:none;background:transparent;font-family:'DM Sans',sans-serif}
-.bottom-nav-item.active{color:var(--g2);background:rgba(59,130,246,0.1)}
-.section-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.section-title .accent{color:var(--g2)}
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:10px 12px;color:var(--text2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
-td{padding:11px 12px;border-bottom:1px solid rgba(31,45,66,0.4);color:var(--text)}
-tr:hover td{background:rgba(59,130,246,0.02)}
-.empty{text-align:center;padding:48px;color:var(--text3)}
-.empty-icon{font-size:40px;margin-bottom:12px;opacity:.4}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--card2),var(--card3));border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:11px 22px;font-size:13px;font-weight:600;color:var(--g2);z-index:999;animation:toastIn .25s ease;box-shadow:0 8px 32px rgba(0,0,0,0.5);white-space:nowrap}
-@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.toggle{width:44px;height:24px;border-radius:99px;border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .2s}
-.toggle-on{background:linear-gradient(90deg,var(--g1),var(--g2))}
-.toggle-off{background:var(--border2)}
-.toggle::after{content:'';position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
-.toggle-on::after{left:23px}.toggle-off::after{left:3px}
-.upload-area{border:2px dashed var(--border2);border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.02)}
-.upload-area:hover{border-color:var(--g1);background:rgba(59,130,246,0.04)}
-.qr-box{width:100%;aspect-ratio:1;background:rgba(255,255,255,0.03);border:2px dashed var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3);font-size:13px;cursor:pointer;transition:all .2s;overflow:hidden}
-.qr-box:hover{border-color:var(--g1)}
-.qr-box img{width:100%;height:100%;object-fit:contain;border-radius:12px}
-/* Type selector */
-.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.type-btn{padding:10px 6px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.02);cursor:pointer;text-align:center;transition:all .15s;font-family:'DM Sans',sans-serif}
-.type-btn:hover{border-color:var(--border2);background:rgba(255,255,255,0.05)}
-.type-btn.selected{border-color:var(--g1);background:rgba(59,130,246,0.1)}
-.type-btn .t-icon{font-size:20px;margin-bottom:4px}
-.type-btn .t-label{font-size:11px;font-weight:700;color:var(--text2)}
-.type-btn.selected .t-label{color:var(--g2)}
-/* Export card */
-.export-option{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;transition:all .2s;cursor:pointer}
-.export-option:hover{border-color:var(--border2);background:rgba(255,255,255,0.04)}
-.export-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-/* Loan card */
-.loan-card{background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.2);border-radius:14px;padding:14px;margin-bottom:10px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+input,select,button,textarea{font-family:'Outfit',sans-serif;}
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:4px;}
+
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,175,55,0.15)}50%{box-shadow:0 0 60px rgba(212,175,55,0.5)}}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-14px)}}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes sweep{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes barRise{from{height:0}to{height:var(--h)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastPop{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+
+/* ══════════════════════════════════════
+   LOADING
+══════════════════════════════════════ */
+#loading{
+  position:fixed;inset:0;z-index:9000;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  transition:opacity .5s ease;
+}
+#loading.hide{opacity:0;pointer-events:none;}
+.ld-ring{width:54px;height:54px;border-radius:50%;border:2px solid var(--gold-dim);border-top-color:var(--gold);animation:spin .8s linear infinite;}
+.ld-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:800;color:var(--gold);letter-spacing:1px;}
+
+/* ══════════════════════════════════════
+   SETUP / LOGIN
+══════════════════════════════════════ */
+#setup-overlay{
+  position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(ellipse at 30% 40%,#1a0e3a,var(--bg) 65%);
+  overflow-y:auto;
+}
+#setup-overlay.on{display:flex;}
+.sf{position:absolute;border-radius:50%;filter:blur(80px);animation:float 12s ease infinite;pointer-events:none;}
+.sf1{width:400px;height:400px;background:rgba(212,175,55,0.07);top:-120px;right:-100px;}
+.sf2{width:300px;height:300px;background:rgba(59,130,246,0.04);bottom:-80px;left:-80px;animation-delay:-6s;}
+.sf3{width:200px;height:200px;background:rgba(167,139,250,0.05);top:50%;left:10%;animation-delay:-3s;}
+
+.setup-card{
+  width:100%;max-width:460px;position:relative;z-index:2;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);
+  border-radius:26px;padding:36px 32px;backdrop-filter:blur(24px);
+  box-shadow:0 40px 80px rgba(0,0,0,0.6);animation:fadeUp .5s ease;
+}
+.setup-logo{text-align:center;margin-bottom:30px;}
+.setup-icon{
+  width:76px;height:76px;border-radius:22px;margin:0 auto 14px;font-size:30px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));
+  display:flex;align-items:center;justify-content:center;animation:glow 4s ease infinite;
+}
+.setup-h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:800;color:#fff;}
+.setup-sub{font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-top:5px;font-weight:600;}
+
+.step{display:none;} .step.active{display:block;animation:fadeIn .3s ease;}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
+.step-desc{font-size:12px;color:var(--sub);margin-bottom:20px;line-height:1.7;}
+
+.fi{width:100%;padding:12px 15px;border-radius:12px;font-size:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:10px;}
+.fi:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,0.12);}
+.fi::placeholder{color:var(--muted);}
+.btn-gold{width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#000;font-weight:700;font-size:14px;transition:all .2s;letter-spacing:.3px;}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(212,175,55,0.45);}
+.btn-gold:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.hint{font-size:11px;color:var(--sub);text-align:center;margin-top:12px;line-height:1.6;}
+.err-box{color:var(--red);font-size:12px;padding:9px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:10px;margin-bottom:10px;display:none;animation:fadeIn .2s ease;}
+.link-box{background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:12px;padding:16px;margin-bottom:14px;font-size:12px;color:var(--text);line-height:1.8;}
+.link-box strong{color:var(--gold);}
+.link-box a{color:var(--gold);text-decoration:none;}
+.config-box{background:rgba(0,0,0,0.35);border:1px solid var(--cb);border-radius:12px;padding:14px;margin:12px 0;font-size:11px;color:var(--sub);line-height:1.9;font-family:monospace;}
+.config-box span{color:var(--gold);}
+.tab-row{display:flex;gap:5px;background:rgba(255,255,255,0.04);border-radius:12px;padding:4px;margin-bottom:18px;}
+.tab-b{flex:1;padding:9px;border-radius:9px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;background:transparent;color:var(--sub);}
+.tab-b.on{background:var(--gold);color:#000;}
+.progress-steps{display:flex;align-items:center;gap:7px;margin-bottom:22px;}
+.ps{flex:1;height:4px;border-radius:99px;background:var(--muted);transition:background .35s;}
+.ps.done{background:var(--gold);}
+
+/* ══════════════════════════════════════
+   SYNC BAR
+══════════════════════════════════════ */
+#sync{height:2px;position:fixed;top:0;left:0;right:0;z-index:9999;display:none;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent);
+  background-size:200%;animation:sweep 1.2s linear infinite;}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+.hdr{
+  position:sticky;top:0;z-index:400;height:60px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+  background:rgba(6,6,15,0.94);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--cb);
+}
+.hdr-logo{display:flex;align-items:center;gap:10px;}
+.hdr-ico{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.hdr-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:800;color:#fff;line-height:1;}
+.hdr-tag{font-size:8px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;}
+.hdr-r{display:flex;align-items:center;gap:4px;}
+.ico-btn{background:none;border:none;cursor:pointer;color:var(--sub);padding:8px;border-radius:9px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative;}
+.ico-btn:hover{color:var(--gold);background:var(--gold-dim);}
+.rbadge{font-size:10px;color:var(--gold);padding:3px 10px;border-radius:99px;background:var(--gold-dim);font-weight:700;border:1px solid rgba(212,175,55,0.2);}
+.ndot{width:7px;height:7px;background:var(--red);border-radius:50%;position:absolute;top:4px;right:3px;border:1.5px solid var(--bg);}
+
+/* ══════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════ */
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.on{display:flex;}
+.layout{display:flex;flex:1;max-width:1300px;margin:0 auto;width:100%;}
+
+.sidebar{
+  width:215px;flex-shrink:0;padding:18px 10px;position:sticky;top:60px;
+  height:calc(100vh - 60px);overflow-y:auto;display:flex;flex-direction:column;
+  gap:3px;border-right:1px solid var(--cb);
+}
+.sidebar-section{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 13px 5px;margin-top:8px;}
+.nv{
+  display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:11px;border:none;
+  cursor:pointer;background:transparent;color:var(--sub);font-size:13px;font-weight:500;
+  transition:all .18s;width:100%;text-align:left;position:relative;
+}
+.nv:hover{color:var(--text);background:rgba(255,255,255,0.04);}
+.nv.on{background:var(--gold-dim);color:var(--gold);font-weight:600;}
+.nv.on::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:3px;border-radius:99px;background:var(--gold);}
+.nvb{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;border-radius:99px;padding:2px 7px;animation:pulse 2s ease infinite;}
+.nv-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;}
+.nv.on .nv-icon{background:rgba(212,175,55,0.15);}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main{flex:1;padding:22px 20px 110px;min-width:0;max-width:900px;}
+.pg{display:none;animation:fadeUp .3s ease;}
+.pg.on{display:block;}
+.pg-head{margin-bottom:20px;}
+.pg-h1{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:800;color:#fff;}
+.pg-sub{font-size:12px;color:var(--sub);margin-top:4px;}
+
+/* ══════════════════════════════════════
+   CARDS
+══════════════════════════════════════ */
+.card{background:var(--card);border:1px solid var(--cb);border-radius:var(--radius);padding:18px;transition:all .22s;}
+.chov:hover{transform:translateY(-2px);border-color:rgba(212,175,55,0.18);box-shadow:0 10px 36px rgba(0,0,0,0.4);}
+.card-row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+
+/* ══════════════════════════════════════
+   HERO BALANCE
+══════════════════════════════════════ */
+.hero{
+  border-radius:var(--radius-lg);padding:28px 28px 24px;
+  background:linear-gradient(135deg,#0d0b32 0%,#1a0f52 40%,#0b1840 100%);
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.hero::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.12),transparent 70%);top:-80px;right:-60px;pointer-events:none;}
+.hero::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.08),transparent 70%);bottom:-40px;left:30%;pointer-events:none;}
+.live-pill{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:5px;font-size:9px;color:var(--green);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:99px;padding:4px 10px;font-weight:700;letter-spacing:.5px;}
+.live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1.5s ease infinite;}
+.bal-label{color:rgba(255,255,255,0.4);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+.bal-value{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,9vw,62px);font-weight:800;color:#fff;line-height:1;margin-bottom:5px;position:relative;z-index:1;}
+.bal-value span{background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bal-status{font-size:12px;font-weight:500;margin-bottom:22px;position:relative;z-index:1;}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap;position:relative;z-index:1;}
+.hs{min-width:80px;}
+.hs-l{font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:3px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+.hs-v{font-size:16px;font-weight:700;}
+.hero-actions{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1;}
+.ha-btn{padding:9px 16px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.ha-gold{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#000;}
+.ha-gold:hover{box-shadow:0 4px 20px rgba(212,175,55,0.5);transform:translateY(-1px);}
+.ha-ghost{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);}
+.ha-ghost:hover{background:rgba(255,255,255,0.14);}
+.ha-red{background:rgba(239,68,68,0.12);color:#fca5a5;border:1px solid rgba(239,68,68,0.2);}
+.ha-red:hover{background:rgba(239,68,68,0.2);}
+
+/* ══════════════════════════════════════
+   STAT GRID
+══════════════════════════════════════ */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px;}
+.sc{padding:16px 15px;}
+.sc-i{font-size:18px;margin-bottom:9px;}
+.sc-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:800;line-height:1;margin-bottom:3px;}
+.sc-l{font-size:10px;color:var(--sub);font-weight:500;}
+
+/* ══════════════════════════════════════
+   CHARTS
+══════════════════════════════════════ */
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.st{font-size:10px;color:var(--sub);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.chart-bars{height:90px;display:flex;align-items:flex-end;gap:6px;margin-top:8px;}
+.cb-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.cb-b{width:100%;border-radius:5px 5px 0 0;transition:height .8s cubic-bezier(.4,0,.2,1);min-height:3px;}
+.cb-l{font-size:8px;color:var(--sub);}
+
+/* ══════════════════════════════════════
+   SECTION TITLE
+══════════════════════════════════════ */
+.sec-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.sec-h{font-size:10px;color:var(--sub);font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.sec-link{font-size:11px;color:var(--gold);background:none;border:none;cursor:pointer;font-weight:600;transition:opacity .2s;}
+.sec-link:hover{opacity:.7;}
+
+/* ══════════════════════════════════════
+   MEMBER CARDS
+══════════════════════════════════════ */
+.ml{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.mc{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;font-family:'Cormorant Garamond',serif;}
+.av-p{background:linear-gradient(135deg,#15803d,var(--green));color:#fff;}
+.av-u{background:linear-gradient(135deg,#92400e,var(--gold));color:#000;}
+.mi{flex:1;min-width:0;}
+.mn{font-weight:700;font-size:14px;color:var(--text);}
+.mt2{font-size:11px;color:var(--sub);margin-top:2px;}
+.ma{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.pb{padding:6px 14px;border-radius:9px;border:none;cursor:pointer;font-size:11px;font-weight:700;transition:all .2s;}
+.pb-p{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.pb-p:hover{background:rgba(34,197,94,0.18);}
+.pb-u{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.18);}
+.pb-u:hover{background:rgba(239,68,68,0.16);}
+.pb:disabled{opacity:.45;cursor:not-allowed;}
+.macts{display:flex;gap:4px;margin-top:2px;}
+.it{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:6px;transition:all .2s;display:flex;align-items:center;}
+.it:hover{background:rgba(255,255,255,0.06);}
+
+/* ══════════════════════════════════════
+   EXPENSE / TX ROWS
+══════════════════════════════════════ */
+.el{display:flex;flex-direction:column;gap:8px;}
+.ec{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.ei{flex:1;min-width:0;}
+.ed{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.em{font-size:11px;color:var(--sub);margin-top:2px;}
+.ea{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:800;color:var(--red);white-space:nowrap;}
+
+.tl{display:flex;flex-direction:column;gap:7px;}
+.tc{display:flex;align-items:center;gap:12px;padding:12px 15px;}
+.ti{flex:1;min-width:0;}
+.td{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tdt{font-size:10px;color:var(--sub);margin-top:2px;}
+.tr{text-align:right;flex-shrink:0;}
+.ta{font-weight:700;font-size:13px;}
+.tb{font-size:10px;color:var(--sub);margin-top:1px;}
+
+/* ══════════════════════════════════════
+   MILESTONES
+══════════════════════════════════════ */
+.mscard{padding:16px 18px;}
+.msi{display:flex;align-items:center;gap:12px;}
+.ms-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.ms-nm{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:800;}
+.ms-sb{font-size:11px;color:var(--sub);margin-top:2px;}
+.pbar{height:5px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-top:8px;}
+.pfill{height:100%;border-radius:99px;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn{padding:9px 18px;border-radius:11px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
+.bp{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#000;}
+.bp:hover{box-shadow:0 4px 20px rgba(212,175,55,0.4);transform:translateY(-1px);}
+.bp:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.bg{background:rgba(255,255,255,0.06);color:var(--sub);border:1px solid var(--cb);}
+.bg:hover{background:rgba(255,255,255,0.1);color:var(--text);}
+.bd{background:rgba(239,68,68,0.09);color:var(--red);border:1px solid rgba(239,68,68,0.18);}
+.bd:hover{background:rgba(239,68,68,0.16);}
+.bsm{padding:7px 12px;font-size:12px;}
+.bxs{padding:5px 10px;font-size:11px;border-radius:8px;}
+
+/* ══════════════════════════════════════
+   BADGES
+══════════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.3px;}
+.badge-g{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.badge-r{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.badge-gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(212,175,55,0.2);}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.mov{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .22s;}
+.mov.on{opacity:1;pointer-events:all;}
+.mbox{
+  background:#0f0f20;border:1px solid var(--cb);border-radius:22px 22px 18px 18px;
+  padding:26px;width:100%;max-width:440px;
+  transform:translateY(20px);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 24px 70px rgba(0,0,0,0.7);
+  max-height:90vh;overflow-y:auto;
+}
+.mov.on .mbox{transform:translateY(0);}
+@media(min-width:600px){.mov{align-items:center;}.mbox{border-radius:22px;}}
+.m-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+.inp{width:100%;padding:11px 14px;border-radius:11px;font-size:13px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:10px;}
+.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,0.1);}
+.inp::placeholder{color:var(--muted);}
+.sel{width:100%;padding:11px 14px;border-radius:11px;font-size:13px;background:#141428;border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;cursor:pointer;margin-bottom:10px;appearance:none;-webkit-appearance:none;}
+.lbl{display:block;font-size:9px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+#tw{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:9001;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;}
+.toast{padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;animation:toastPop .3s ease;box-shadow:0 10px 28px rgba(0,0,0,0.6);max-width:300px;text-align:center;white-space:nowrap;}
+.ts{background:linear-gradient(135deg,#166534,#22c55e);}
+.te{background:linear-gradient(135deg,#991b1b,#ef4444);}
+.ti{background:linear-gradient(135deg,#92400e,var(--gold));color:#000;}
+
+/* ══════════════════════════════════════
+   MOBILE NAV
+══════════════════════════════════════ */
+.mnav{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:400;
+  background:rgba(6,6,15,0.97);backdrop-filter:blur(24px);
+  border-top:1px solid var(--cb);
+  padding:5px 0 max(8px,env(safe-area-inset-bottom));
+  justify-content:space-around;
+}
+.mnv{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;border:none;cursor:pointer;background:transparent;color:var(--sub);font-size:9px;font-weight:500;transition:color .2s;position:relative;min-width:44px;}
+.mnv.on{color:var(--gold);}
+.mnv.on svg{filter:drop-shadow(0 0 5px rgba(212,175,55,0.6));}
+
+/* ══════════════════════════════════════
+   SETTINGS
+══════════════════════════════════════ */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--cb);}
+.srow:last-child{border-bottom:none;}
+.sl{font-size:13px;font-weight:500;color:var(--text);}
+.ss{font-size:11px;color:var(--sub);margin-top:3px;}
+.st2{font-size:9px;color:var(--gold);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(212,175,55,0.08);}
+
+/* ══════════════════════════════════════
+   ADD FORM
+══════════════════════════════════════ */
+.add-form{background:rgba(255,255,255,0.025);border-radius:13px;padding:16px;margin-top:11px;border:1px solid var(--cb);}
+.dzone{border:1px solid rgba(239,68,68,0.2);border-radius:13px;padding:18px;}
+
+/* ══════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════ */
+.empty{text-align:center;padding:48px 20px;}
+.empty-ico{font-size:38px;margin-bottom:12px;opacity:.6;}
+.empty-t{color:var(--sub);font-size:13px;line-height:1.6;}
+
+/* ══════════════════════════════════════
+   PROGRESS MINI
+══════════════════════════════════════ */
+.mini-prog{height:4px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-top:5px;}
+.mini-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold-l));transition:width .8s ease;}
+
+/* ══════════════════════════════════════
+   LOANS PAGE
+══════════════════════════════════════ */
+.loan-card{background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.18);border-radius:14px;padding:16px;margin-bottom:10px;transition:all .2s;}
+.loan-card:hover{border-color:rgba(167,139,250,0.32);}
+
+/* ══════════════════════════════════════
+   CONNECTION STATUS
+══════════════════════════════════════ */
+#conn-banner{
+  position:fixed;top:60px;left:0;right:0;z-index:399;
+  padding:7px 16px;font-size:12px;font-weight:600;text-align:center;
+  display:none;transition:all .3s;
+}
+#conn-banner.offline{display:block;background:rgba(239,68,68,0.15);color:var(--red);border-bottom:1px solid rgba(239,68,68,0.25);}
+#conn-banner.online{display:block;background:rgba(34,197,94,0.12);color:var(--green);border-bottom:1px solid rgba(34,197,94,0.2);}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
 @media(max-width:768px){
-  .sidebar{display:none}.main{margin-left:0;padding:16px 16px 88px;width:100%}
-  .nav{padding:0 16px}.bottom-nav{display:flex}
-  .grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr}.hide-mobile{display:none}
-  .hero-amount{font-size:36px}.type-grid{grid-template-columns:repeat(3,1fr)}
+  .sidebar{display:none;} .mnav{display:flex;}
+  .crow{grid-template-columns:1fr;}
+  .main{padding:14px 12px 100px;}
+  .hdr{padding:0 14px;}
+  .hero{padding:22px 18px 20px;}
+  .hero-stats{gap:14px;}
+  .sgrid{grid-template-columns:repeat(2,1fr);}
 }
-@media(max-width:480px){.grid-2{grid-template-columns:1fr}}
+@media(max-width:380px){.sgrid{grid-template-columns:1fr 1fr;}}
+
+/* ══════════════════════════════════════
+   LOAN SECTION
+══════════════════════════════════════ */
+.type-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.type-chip{padding:7px 14px;border-radius:99px;border:1px solid var(--cb);background:transparent;color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;}
+.type-chip.on{background:var(--gold);color:#000;border-color:var(--gold);}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
-const DEFAULT_PASS='a2dv2024';
-const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const MILESTONES=[
-  {amount:1000,label:'First Thousand',emoji:'🎯'},{amount:5000,label:'High Five!',emoji:'🙌'},
-  {amount:10000,label:'Five Figures',emoji:'💎'},{amount:25000,label:'Quarter Lakh',emoji:'🚀'},
-  {amount:50000,label:'Half Lakh!',emoji:'🏆'},{amount:100000,label:'One Lakh Club',emoji:'👑'},
-];
-const INIT_MEMBERS=[
-  {id:1,name:'Arjun',emoji:'🦁',color:'#3b82f6',photo:null,joined:'2024-01'},
-  {id:2,name:'Aditya',emoji:'🐺',color:'#60a5fa',photo:null,joined:'2024-01'},
-  {id:3,name:'Dhruv',emoji:'🦊',color:'#10b981',photo:null,joined:'2024-01'},
-  {id:4,name:'Viren',emoji:'🐉',color:'#a78bfa',photo:null,joined:'2024-01'},
-];
-const COLORS=['#3b82f6','#60a5fa','#10b981','#a78bfa','#f0b429','#f87171','#fb923c','#34d399'];
-const EMOJIS=['🦁','🐺','🦊','🐉','🐯','🦅','🐻','🦈','🐸','🦉'];
-const EXP_CATS=['Food 🍕','Travel ✈️','Celebration 🎉','Emergency 🆘','Investment 📈','Shopping 🛍️','Other 💡'];
-const INIT_STATE={
-  members:INIT_MEMBERS,transactions:[],monthlyContributions:{},
-  monthlyAmount:200,fundName:'A2DV Boys Fund',
-  qrImage:null,upiId:'',adminPass:DEFAULT_PASS,loans:[],
+<!-- ══ SYNC BAR ══ -->
+<div id="sync"></div>
+
+<!-- ══ CONNECTION BANNER ══ -->
+<div id="conn-banner">📡 You're offline — showing cached data</div>
+
+<!-- ══ LOADING ══ -->
+<div id="loading">
+  <div style="font-size:40px;margin-bottom:4px;">💰</div>
+  <div class="ld-logo">A2DV Boys Fund</div>
+  <div class="ld-ring"></div>
+</div>
+
+<!-- ══ SETUP / LOGIN OVERLAY ══ -->
+<div id="setup-overlay">
+  <div class="sf sf1"></div><div class="sf sf2"></div><div class="sf sf3"></div>
+  <div class="setup-card">
+    <div class="setup-logo">
+      <div class="setup-icon">💰</div>
+      <div class="setup-h1">A2DV Boys</div>
+      <div class="setup-sub">Fund Manager</div>
+    </div>
+
+    <!-- STEP 0: Login -->
+    <div class="step active" id="step-0">
+      <div class="step-title">Welcome Back 👋</div>
+      <div class="step-desc">Sign in to manage your group fund.</div>
+      <div class="tab-row">
+        <button class="tab-b on" id="tb-admin" onclick="switchTab('admin')">🔐 Admin</button>
+        <button class="tab-b" id="tb-view" onclick="switchTab('viewer')">👁 View Only</button>
+      </div>
+      <div id="admin-fields">
+        <label class="lbl" style="margin-bottom:5px;display:block">Password</label>
+        <input class="fi" id="login-pass" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <div id="viewer-info" style="display:none;text-align:center;font-size:12px;color:var(--sub);margin-bottom:14px;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;line-height:1.6;">
+        View all fund data in <strong style="color:var(--text)">read-only</strong> mode. No password needed.
+      </div>
+      <div id="login-err" class="err-box"></div>
+      <button class="btn-gold" id="login-btn" onclick="doLogin()">Sign In as Admin</button>
+      <p class="hint" id="first-hint" style="display:none;">
+        First time? <button onclick="goStep(1)" style="background:none;border:none;cursor:pointer;color:var(--gold);font-weight:700;font-size:11px;">Setup Firebase →</button>
+      </p>
+    </div>
+
+    <!-- STEP 1: Firebase instructions -->
+    <div class="step" id="step-1">
+      <div class="progress-steps"><div class="ps done"></div><div class="ps"></div><div class="ps"></div></div>
+      <div class="step-title">Setup Firebase (Free)</div>
+      <div class="step-desc">Google's free database — no credit card needed, free forever.</div>
+      <div class="link-box">
+        <strong>Step 1:</strong> Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a><br/>
+        <strong>Step 2:</strong> Click <strong>"Add project"</strong> → name it "a2dv-fund" → Continue<br/>
+        <strong>Step 3:</strong> Disable Analytics → <strong>"Create project"</strong><br/>
+        <strong>Step 4:</strong> Left sidebar → Build → <strong>"Firestore Database"</strong><br/>
+        <strong>Step 5:</strong> Click <strong>"Create database"</strong> → "Start in test mode" → Enable<br/>
+        <strong>Step 6:</strong> Gear icon → Project Settings → click <strong>"&lt;/&gt; Web"</strong> → register app → copy the <strong>firebaseConfig</strong>
+      </div>
+      <button class="btn-gold" onclick="goStep(2)">I have my config →</button>
+      <p class="hint"><button onclick="goStep(0)" style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:11px;">← Back to Login</button></p>
+    </div>
+
+    <!-- STEP 2: Paste config -->
+    <div class="step" id="step-2">
+      <div class="progress-steps"><div class="ps done"></div><div class="ps done"></div><div class="ps"></div></div>
+      <div class="step-title">Paste Firebase Config</div>
+      <div class="step-desc">Find these values in your Firebase project settings.</div>
+      <div class="config-box">apiKey: <span>"AIzaSy..."</span><br/>projectId: <span>"a2dv-fund"</span><br/>appId: <span>"1:123:web:abc..."</span></div>
+      <label class="lbl">API Key</label><input class="fi" id="cfg-apiKey" placeholder="AIzaSy..."/>
+      <label class="lbl">Project ID</label><input class="fi" id="cfg-projectId" placeholder="a2dv-fund"/>
+      <label class="lbl">App ID</label><input class="fi" id="cfg-appId" placeholder="1:123456789:web:abc"/>
+      <div id="cfg-err" class="err-box"></div>
+      <button class="btn-gold" id="cfg-btn" onclick="saveConfig()">Connect to Firebase →</button>
+      <p class="hint"><button onclick="goStep(1)" style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:11px;">← Back</button></p>
+    </div>
+
+    <!-- STEP 3: Set password -->
+    <div class="step" id="step-3">
+      <div class="progress-steps"><div class="ps done"></div><div class="ps done"></div><div class="ps done"></div></div>
+      <div class="step-title">Set Admin Password 🔐</div>
+      <div class="step-desc">Secure admin access. Members can view without a password.</div>
+      <label class="lbl">Admin Password (min 4 chars)</label>
+      <input class="fi" id="setup-pass" type="password" placeholder="e.g. a2dv2025"/>
+      <label class="lbl">Confirm Password</label>
+      <input class="fi" id="setup-pass2" type="password" placeholder="Repeat" onkeydown="if(event.key==='Enter')completeSetup()"/>
+      <div id="setup-err" class="err-box"></div>
+      <button class="btn-gold" id="setup-btn" onclick="completeSetup()">🚀 Launch App!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+   APP
+══════════════════════════════════════ -->
+<div id="app">
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-logo">
+      <div class="hdr-ico">💰</div>
+      <div>
+        <div class="hdr-name" id="hdr-fund-name">A2DV Boys</div>
+        <div class="hdr-tag">Fund Manager</div>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <div id="notif-wrap" style="display:none;position:relative;">
+        <button class="ico-btn" onclick="navigate('members')" title="Pending payments">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="ndot" id="notif-dot"></span>
+        </button>
+      </div>
+      <button class="ico-btn" onclick="syncAll(true)" title="Refresh data">
+        <svg id="ri" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+      <span id="rbadge" class="rbadge">Loading…</span>
+      <button class="ico-btn" onclick="doLogout()" title="Logout">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <button class="nv on" data-pg="dashboard" onclick="navigate('dashboard')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        Dashboard
+      </button>
+      <button class="nv" data-pg="members" onclick="navigate('members')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        Members
+        <span class="nvb" id="nv-b" style="display:none">0</span>
+      </button>
+      <div class="sidebar-section">Finance</div>
+      <button class="nv" data-pg="expenses" onclick="navigate('expenses')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/></svg></div>
+        Expenses
+      </button>
+      <button class="nv" data-pg="loans" onclick="navigate('loans')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        Loans
+      </button>
+      <button class="nv" data-pg="history" onclick="navigate('history')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+        History
+      </button>
+      <div class="sidebar-section">More</div>
+      <button class="nv" data-pg="milestones" onclick="navigate('milestones')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M7 5a5 5 0 0 0 10 0"/></svg></div>
+        Goals
+      </button>
+      <button class="nv" data-pg="settings" id="sb-s" style="display:none;" onclick="navigate('settings')">
+        <div class="nv-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        Settings
+      </button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <div class="pg on" id="pg-dashboard">
+        <div class="hero">
+          <div class="live-pill"><span class="live-dot"></span>LIVE</div>
+          <div class="bal-label">Total Fund Balance</div>
+          <div class="bal-value" id="h-bal"><span>₹0</span></div>
+          <div class="bal-status" id="h-st"></div>
+          <div class="hero-stats">
+            <div class="hs"><div class="hs-l">Total Income</div><div class="hs-v" id="h-inc" style="color:#86efac">₹0</div></div>
+            <div class="hs"><div class="hs-l">Total Spent</div><div class="hs-v" id="h-sp" style="color:#fca5a5">₹0</div></div>
+            <div class="hs"><div class="hs-l">This Month</div><div class="hs-v" id="h-mo" style="color:#fde68a">—</div></div>
+            <div class="hs"><div class="hs-l">Members</div><div class="hs-v" id="h-mem" style="color:#c4b5fd">4</div></div>
+          </div>
+          <div class="hero-actions" id="hero-admin-actions" style="display:none;">
+            <button class="ha-btn ha-gold" onclick="openModal('exp-modal')">💸 Add Expense</button>
+            <button class="ha-btn ha-ghost" onclick="openModal('loan-modal')">🤝 New Loan</button>
+            <button class="ha-btn ha-ghost" onclick="openModal('deposit-modal')">💰 Add Deposit</button>
+          </div>
+        </div>
+
+        <div class="sgrid">
+          <div class="card chov sc"><div class="sc-i">💳</div><div class="sc-v" id="sc1" style="color:var(--gold)">₹0</div><div class="sc-l">Monthly Target</div></div>
+          <div class="card chov sc"><div class="sc-i">✅</div><div class="sc-v" id="sc2" style="color:var(--green)">0/0</div><div class="sc-l">Paid This Month</div></div>
+          <div class="card chov sc"><div class="sc-i">🤝</div><div class="sc-v" id="sc-loans" style="color:var(--purple)">₹0</div><div class="sc-l">Active Loans</div></div>
+          <div class="card chov sc"><div class="sc-i">📦</div><div class="sc-v" id="sc4" style="color:#60a5fa">0</div><div class="sc-l">Total Expenses</div></div>
+        </div>
+
+        <div class="crow">
+          <div class="card"><div class="st">Monthly Income</div><div class="chart-bars" id="ci"></div></div>
+          <div class="card"><div class="st">Monthly Expenses</div><div class="chart-bars" id="ce"></div></div>
+        </div>
+
+        <div class="card" style="margin-bottom:14px;">
+          <div class="sec-title"><div class="sec-h">This Month's Status</div><button class="sec-link" onclick="navigate('members')">View All →</button></div>
+          <div id="d-ml"></div>
+        </div>
+
+        <div class="card">
+          <div class="sec-title"><div class="sec-h">Recent Transactions</div><button class="sec-link" onclick="navigate('history')">See All →</button></div>
+          <div id="d-recent-tx"></div>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="pg" id="pg-members">
+        <div class="pg-head">
+          <div class="pg-h1">Members</div>
+          <div class="pg-sub" id="m-sub">Loading…</div>
+        </div>
+        <div class="ml" id="m-list"><div class="empty"><div class="ld-ring" style="margin:0 auto;"></div></div></div>
+        <div id="add-mem-s" style="display:none;">
+          <div class="add-form">
+            <div class="st" style="margin-bottom:10px;">Add New Member</div>
+            <div style="display:flex;gap:8px;">
+              <input class="inp" id="new-mem" placeholder="Member name" style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')addMember()"/>
+              <button class="btn bp bsm" onclick="addMember()">+ Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="pg" id="pg-expenses">
+        <div class="pg-head" style="display:flex;align-items:center;justify-content:space-between;">
+          <div><div class="pg-h1">Expenses</div><div class="pg-sub" id="e-sub">All fund withdrawals</div></div>
+          <button class="btn bp bsm" id="add-e-btn" style="display:none;" onclick="openModal('exp-modal')">+ Add</button>
+        </div>
+        <div class="el" id="e-list"></div>
+        <div class="empty" id="e-empty" style="display:none;"><div class="empty-ico">💰</div><div class="empty-t">No expenses yet!<br/>Fund is growing untouched.</div></div>
+      </div>
+
+      <!-- LOANS -->
+      <div class="pg" id="pg-loans">
+        <div class="pg-head" style="display:flex;align-items:center;justify-content:space-between;">
+          <div><div class="pg-h1">Loans 🤝</div><div class="pg-sub" id="loans-sub">Member loan tracker</div></div>
+          <button class="btn bp bsm" id="add-loan-btn" style="display:none;" onclick="openModal('loan-modal')">+ New Loan</button>
+        </div>
+        <div id="loans-summary" style="margin-bottom:14px;display:none;">
+          <div class="card" style="background:rgba(167,139,250,0.06);border-color:rgba(167,139,250,0.2);">
+            <div style="display:flex;gap:20px;flex-wrap:wrap;">
+              <div><div style="font-size:9px;color:var(--sub);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:4px;">Total Outstanding</div><div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:800;color:var(--purple);" id="loan-total">₹0</div></div>
+              <div><div style="font-size:9px;color:var(--sub);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:4px;">Active Loans</div><div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:800;color:var(--purple);" id="loan-count">0</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="loans-list"></div>
+        <div class="empty" id="loans-empty" style="display:none;"><div class="empty-ico">🤝</div><div class="empty-t">No loans yet.<br/>Members are self-sufficient!</div></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="pg" id="pg-history">
+        <div class="pg-head">
+          <div class="pg-h1">History</div>
+          <div class="pg-sub">Full ledger with running balance</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="hist-filters">
+          <button class="type-chip on" onclick="setHistFilter('all',this)">All</button>
+          <button class="type-chip" onclick="setHistFilter('income',this)">Income</button>
+          <button class="type-chip" onclick="setHistFilter('expense',this)">Expenses</button>
+          <button class="type-chip" onclick="setHistFilter('loan',this)">Loans</button>
+        </div>
+        <div class="tl" id="tx-list"></div>
+        <div class="empty" id="tx-empty" style="display:none;"><div class="empty-ico">📋</div><div class="empty-t">No transactions yet.</div></div>
+      </div>
+
+      <!-- MILESTONES -->
+      <div class="pg" id="pg-milestones">
+        <div class="pg-head"><div class="pg-h1">Goals 🎯</div><div class="pg-sub">Track your savings milestones</div></div>
+        <div class="card" style="text-align:center;padding:26px;margin-bottom:14px;background:linear-gradient(135deg,rgba(212,175,55,0.06),rgba(212,175,55,0.02));">
+          <div style="font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-weight:700;">Next Milestone</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:800;color:var(--gold);" id="ms-n">₹0</div>
+          <div style="font-size:12px;color:var(--sub);margin:10px 0 4px;" id="ms-t"></div>
+          <div class="pbar" style="max-width:300px;margin:0 auto 10px;"><div class="pfill" id="ms-f" style="background:linear-gradient(90deg,var(--gold),var(--gold-l));width:0%;"></div></div>
+          <div style="font-size:12px;color:var(--sub);" id="ms-r"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;" id="ms-list"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="pg" id="pg-settings">
+        <div class="pg-head"><div class="pg-h1">Settings ⚙️</div></div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="st2">Fund Settings</div>
+          <div class="srow">
+            <div><div class="sl">Fund Name</div><div class="ss" id="fund-name-disp">A2DV Boys Fund</div></div>
+            <button class="btn bg bxs" onclick="openModal('fname-modal')">Edit</button>
+          </div>
+          <div class="srow">
+            <div><div class="sl">Monthly contribution</div><div class="ss" id="curr-amt">₹200 / month</div></div>
+            <button class="btn bg bxs" onclick="openAmtModal()">Edit</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="st2">Share & Backup</div>
+          <div class="srow">
+            <div><div class="sl">Share App</div><div class="ss">Copy link for members to view</div></div>
+            <button class="btn bg bxs" onclick="shareApp()">Copy Link</button>
+          </div>
+          <div class="srow">
+            <div><div class="sl">Export Data</div><div class="ss">Download full JSON backup</div></div>
+            <button class="btn bg bxs" onclick="exportData()">Export</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="st2">Security</div>
+          <div class="srow" style="border-bottom:none;">
+            <div><div class="sl">Admin Password</div><div class="ss">Change login password</div></div>
+            <button class="btn bg bxs" onclick="openModal('pw-modal')">Change</button>
+          </div>
+        </div>
+        <div class="dzone">
+          <div class="st2" style="color:var(--red);border-color:rgba(239,68,68,0.1);">Danger Zone</div>
+          <div id="rc" style="display:none;margin-bottom:12px;">
+            <p style="font-size:12px;color:var(--sub);margin-bottom:10px;">Erases ALL contributions, expenses and loans. <strong style="color:var(--red)">Cannot be undone.</strong></p>
+            <div style="display:flex;gap:8px;">
+              <button class="btn bd bsm" onclick="doReset()">Yes, Reset All Data</button>
+              <button class="btn bg bsm" onclick="document.getElementById('rc').style.display='none'">Cancel</button>
+            </div>
+          </div>
+          <button class="btn bd bsm" onclick="document.getElementById('rc').style.display='block'">🗑 Reset All Fund Data</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MOBILE NAV -->
+  <nav class="mnav">
+    <button class="mnv on" data-pg="dashboard" onclick="navigate('dashboard')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
+    </button>
+    <button class="mnv" data-pg="members" onclick="navigate('members')" style="position:relative;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Members
+      <span id="mob-b" style="position:absolute;top:2px;right:8px;width:7px;height:7px;background:var(--red);border-radius:50%;display:none;border:1.5px solid var(--bg);"></span>
+    </button>
+    <button class="mnv" data-pg="expenses" onclick="navigate('expenses')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/></svg>Expenses
+    </button>
+    <button class="mnv" data-pg="loans" onclick="navigate('loans')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Loans
+    </button>
+    <button class="mnv" data-pg="history" onclick="navigate('history')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>History
+    </button>
+    <button class="mnv" data-pg="milestones" onclick="navigate('milestones')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M7 5a5 5 0 0 0 10 0"/></svg>Goals
+    </button>
+    <button class="mnv" data-pg="settings" id="mob-s" style="display:none;" onclick="navigate('settings')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings
+    </button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════
+   MODALS
+══════════════════════════════════════ -->
+
+<!-- Expense Modal -->
+<div class="mov" id="exp-modal">
+  <div class="mbox">
+    <div class="m-title">Add Expense <button class="ico-btn" onclick="closeModal('exp-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Description</label><input class="inp" id="ex-d" placeholder="What was spent on?"/>
+    <label class="lbl">Amount (₹)</label><input class="inp" type="number" id="ex-a" placeholder="0" min="1"/>
+    <label class="lbl">Category</label>
+    <select class="sel" id="ex-c"><option>General</option><option>Food</option><option>Travel</option><option>Entertainment</option><option>Emergency</option><option>Investment</option><option>Other</option></select>
+    <label class="lbl">Date</label><input class="inp" type="date" id="ex-dt"/>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn bp" style="flex:1;" id="sv-exp" onclick="saveExpense()">Record Expense</button>
+      <button class="btn bg" onclick="closeModal('exp-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loan Modal -->
+<div class="mov" id="loan-modal">
+  <div class="mbox">
+    <div class="m-title">New Loan 🤝 <button class="ico-btn" onclick="closeModal('loan-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Borrower</label>
+    <select class="sel" id="loan-mem"></select>
+    <label class="lbl">Loan Amount (₹)</label><input class="inp" type="number" id="loan-amt" placeholder="0" min="1"/>
+    <label class="lbl">Note (optional)</label><input class="inp" id="loan-note" placeholder="Reason for loan"/>
+    <label class="lbl">Date</label><input class="inp" type="date" id="loan-dt"/>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn bp" style="flex:1;" id="sv-loan" onclick="saveLoan()">Record Loan</button>
+      <button class="btn bg" onclick="closeModal('loan-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Repay Modal -->
+<div class="mov" id="repay-modal">
+  <div class="mbox">
+    <div class="m-title">Record Repayment <button class="ico-btn" onclick="closeModal('repay-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <input type="hidden" id="repay-loan-id"/>
+    <div id="repay-info" style="font-size:13px;color:var(--sub);margin-bottom:14px;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;line-height:1.7;"></div>
+    <label class="lbl">Repayment Amount (₹)</label><input class="inp" type="number" id="repay-amt" placeholder="0" min="1"/>
+    <label class="lbl">Date</label><input class="inp" type="date" id="repay-dt"/>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn bp" style="flex:1;" onclick="saveRepayment()">Record Payment</button>
+      <button class="btn bg" onclick="closeModal('repay-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Deposit Modal -->
+<div class="mov" id="deposit-modal">
+  <div class="mbox">
+    <div class="m-title">Add Deposit 💰 <button class="ico-btn" onclick="closeModal('deposit-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Member (optional)</label>
+    <select class="sel" id="dep-mem"><option value="">— General Deposit —</option></select>
+    <label class="lbl">Amount (₹)</label><input class="inp" type="number" id="dep-amt" placeholder="0" min="1"/>
+    <label class="lbl">Note</label><input class="inp" id="dep-note" placeholder="Reason for deposit"/>
+    <label class="lbl">Date</label><input class="inp" type="date" id="dep-dt"/>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn bp" style="flex:1;" onclick="saveDeposit()">Record Deposit</button>
+      <button class="btn bg" onclick="closeModal('deposit-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Amount Modal -->
+<div class="mov" id="amt-modal">
+  <div class="mbox">
+    <div class="m-title">Monthly Amount <button class="ico-btn" onclick="closeModal('amt-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Amount per member / month (₹)</label>
+    <input class="inp" type="number" id="new-amt" min="1"/>
+    <p style="font-size:12px;color:var(--sub);margin-bottom:14px;">⚠️ This updates the monthly target for all members going forward.</p>
+    <div style="display:flex;gap:8px;"><button class="btn bp" style="flex:1;" onclick="saveAmt()">Save</button><button class="btn bg" onclick="closeModal('amt-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- Edit Member Modal -->
+<div class="mov" id="edit-mem-modal">
+  <div class="mbox">
+    <div class="m-title">Edit Member <button class="ico-btn" onclick="closeModal('edit-mem-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <input type="hidden" id="em-id"/>
+    <label class="lbl">Name</label><input class="inp" id="em-name" onkeydown="if(event.key==='Enter')saveEditMem()"/>
+    <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn bp" style="flex:1;" onclick="saveEditMem()">Save Changes</button><button class="btn bg" onclick="closeModal('edit-mem-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- Fund Name Modal -->
+<div class="mov" id="fname-modal">
+  <div class="mbox">
+    <div class="m-title">Fund Name <button class="ico-btn" onclick="closeModal('fname-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">Fund Name</label><input class="inp" id="new-fname" placeholder="e.g. A2DV Boys Fund"/>
+    <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn bp" style="flex:1;" onclick="saveFundName()">Save</button><button class="btn bg" onclick="closeModal('fname-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- Password Modal -->
+<div class="mov" id="pw-modal">
+  <div class="mbox">
+    <div class="m-title">Change Password <button class="ico-btn" onclick="closeModal('pw-modal')"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <label class="lbl">New Password</label><input class="inp" type="password" id="new-pw" placeholder="Min 4 characters"/>
+    <label class="lbl">Confirm New Password</label><input class="inp" type="password" id="new-pw2" placeholder="Repeat password"/>
+    <div id="pw-err" class="err-box" style="margin-top:4px;"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn bp" style="flex:1;" onclick="changePassword()">Update Password</button><button class="btn bg" onclick="closeModal('pw-modal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- TOAST WRAPPER -->
+<div id="tw"></div>
+
+<!-- ══════════════════════════════════════
+   FIREBASE + APP LOGIC
+══════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getFirestore, collection, doc, getDoc, getDocs, setDoc,
+  updateDoc, deleteDoc, onSnapshot, query, orderBy, where
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ─── CONSTANTS ───────────────────────
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MILESTONES = [1000,5000,10000,25000,50000,100000];
+const MS_EMOJI = ['🌱','💪','🏆','🚀','💎','👑'];
+const CAT_EMOJI = {General:'💸',Food:'🍽️',Travel:'✈️',Entertainment:'🎉',Emergency:'🚨',Investment:'📈',Other:'📦'};
+const CAT_COLOR = {General:'var(--gold)',Food:'#f59e0b',Travel:'#3b82f6',Entertainment:'#8b5cf6',Emergency:'#ef4444',Investment:'#22c55e',Other:'#6b7280'};
+const LS = localStorage;
+
+// ─── STATE ───────────────────────────
+let db = null, ROLE = null, CP = 'dashboard', UNSUBS = [];
+let HIST_FILTER = 'all';
+let DATA = {
+  members:[], contributions:{}, expenses:[], loans:[],
+  deposits:[], settings:{ monthly_amount:200, admin_password:'a2dv2024', fund_name:'A2DV Boys Fund' }
 };
 
-// ── Helpers ──────────────────────────────────────────────────
-const fmt=n=>'₹'+Number(n).toLocaleString('en-IN');
-const today=()=>new Date().toISOString().slice(0,10);
-const tmk=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;};
-function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
-function readFile(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result);rd.onerror=()=>j();rd.readAsDataURL(f);})}
+// ─── HELPERS ─────────────────────────
+const fmt = n => '₹' + Number(n||0).toLocaleString('en-IN');
+const fmtDate = d => { try { return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); } catch { return d||''; }};
+const nowKey = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; };
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+const syncBar = on => document.getElementById('sync').style.display = on?'block':'none';
+const $ = id => document.getElementById(id);
+const todayStr = () => new Date().toISOString().split('T')[0];
 
-// ── TX type config ────────────────────────────────────────────
-const TX_TYPES={
-  contribution:{label:'Contribution',icon:'💳',color:'var(--g2)',badge:'badge-blue',sign:'+'},
-  deposit:{label:'Extra Deposit',icon:'💰',color:'var(--green2)',badge:'badge-green',sign:'+'},
-  expense:{label:'Expense',icon:'💸',color:'var(--red2)',badge:'badge-red',sign:'-'},
-  withdrawal:{label:'Withdrawal',icon:'🏧',color:'var(--orange)',badge:'badge-orange',sign:'-'},
-  loan_given:{label:'Loan Given',icon:'🤝',color:'var(--purple)',badge:'badge-purple',sign:'-'},
-  loan_repay:{label:'Loan Repaid',icon:'✅',color:'var(--green2)',badge:'badge-green',sign:'+'},
+// ─── FIREBASE INIT ───────────────────
+function initFirebase(cfg) {
+  try { const app = initializeApp(cfg); db = getFirestore(app); return true; }
+  catch(e) { console.error(e); return false; }
+}
+async function testConn() {
+  try { await getDoc(doc(db,'settings','config')); return true; }
+  catch { return false; }
+}
+
+// ─── SETUP FLOW ──────────────────────
+let loginMode = 'admin';
+window.switchTab = mode => {
+  loginMode = mode;
+  $('tb-admin').classList.toggle('on', mode==='admin');
+  $('tb-view').classList.toggle('on', mode==='viewer');
+  $('admin-fields').style.display = mode==='admin' ? 'block' : 'none';
+  $('viewer-info').style.display = mode==='viewer' ? 'block' : 'none';
+  $('login-btn').textContent = mode==='admin' ? 'Sign In as Admin' : 'Continue as Viewer →';
+  $('login-err').style.display = 'none';
+};
+window.goStep = n => {
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  $('step-'+n).classList.add('active');
+};
+window.saveConfig = async () => {
+  const apiKey = $('cfg-apiKey').value.trim();
+  const projectId = $('cfg-projectId').value.trim();
+  const appId = $('cfg-appId').value.trim();
+  const errEl = $('cfg-err'), btn = $('cfg-btn');
+  if (!apiKey||!projectId||!appId) { errEl.style.display='block'; errEl.textContent='Please fill all three fields'; return; }
+  errEl.style.display='none'; btn.disabled=true; btn.textContent='Connecting…';
+  const cfg = { apiKey, projectId, appId, authDomain:`${projectId}.firebaseapp.com`, storageBucket:`${projectId}.appspot.com`, messagingSenderId:'' };
+  if (!initFirebase(cfg)) { errEl.style.display='block'; errEl.textContent='Invalid config — check your values'; btn.disabled=false; btn.textContent='Connect to Firebase →'; return; }
+  const ok = await testConn();
+  if (!ok) { errEl.style.display='block'; errEl.textContent='Cannot connect — verify Project ID & Firestore is enabled'; btn.disabled=false; btn.textContent='Connect to Firebase →'; return; }
+  LS.setItem('a2dv_fb_cfg', JSON.stringify(cfg));
+  btn.disabled=false; btn.textContent='Connect to Firebase →';
+  goStep(3);
+};
+window.completeSetup = async () => {
+  const p1=$('setup-pass').value, p2=$('setup-pass2').value;
+  const errEl=$('setup-err'), btn=$('setup-btn');
+  if (!p1||p1.length<4) { errEl.style.display='block'; errEl.textContent='Password must be at least 4 characters'; return; }
+  if (p1!==p2) { errEl.style.display='block'; errEl.textContent='Passwords do not match'; return; }
+  errEl.style.display='none'; btn.disabled=true; btn.textContent='Setting up…';
+  try {
+    await setDoc(doc(db,'settings','config'),{ monthly_amount:200, admin_password:p1, fund_name:'A2DV Boys Fund', created_at:new Date().toISOString() });
+    const defaultMembers = [{id:'m1',name:'Arun',avatar:'A',order:1},{id:'m2',name:'Dinesh',avatar:'D',order:2},{id:'m3',name:'Vijay',avatar:'V',order:3},{id:'m4',name:'Bala',avatar:'B',order:4}];
+    for (const m of defaultMembers) await setDoc(doc(db,'members',m.id),{...m,active:true,created_at:new Date().toISOString()});
+    ROLE='admin'; LS.setItem('a2dv_role','admin');
+    await launchApp();
+  } catch(e) { errEl.style.display='block'; errEl.textContent='Error: '+e.message; btn.disabled=false; btn.textContent='🚀 Launch App!'; }
+};
+window.doLogin = async () => {
+  const btn=$('login-btn'), errEl=$('login-err');
+  btn.disabled=true; btn.textContent='…'; errEl.style.display='none';
+  try {
+    if (loginMode==='viewer') { ROLE='viewer'; LS.setItem('a2dv_role','viewer'); await launchApp(); return; }
+    const pw = $('login-pass').value;
+    const cfgDoc = await getDoc(doc(db,'settings','config'));
+    if (!cfgDoc.exists()) { errEl.style.display='block'; errEl.textContent='App not configured yet'; return; }
+    if (pw !== cfgDoc.data().admin_password) { errEl.style.display='block'; errEl.textContent='Wrong password — try again'; return; }
+    ROLE='admin'; LS.setItem('a2dv_role','admin');
+    await launchApp();
+  } catch(e) { errEl.style.display='block'; errEl.textContent='Error: '+e.message; }
+  finally { btn.disabled=false; btn.textContent = loginMode==='admin'?'Sign In as Admin':'Continue as Viewer →'; }
 };
 
-// ── Reducer ───────────────────────────────────────────────────
-function reducer(state,action){
-  switch(action.type){
-    case 'ADD_TX':{
-      const tx={...action.payload,id:Date.now()};
-      const mc=action.payload.monthKey?{...state.monthlyContributions,[action.payload.monthKey]:true}:state.monthlyContributions;
-      return{...state,transactions:[...state.transactions,tx],monthlyContributions:mc};
-    }
-    case 'DELETE_TX':return{...state,transactions:state.transactions.filter(t=>t.id!==action.payload)};
-    case 'ADD_MEMBER':return{...state,members:[...state.members,action.payload]};
-    case 'REMOVE_MEMBER':return{...state,members:state.members.filter(m=>m.id!==action.payload)};
-    case 'UPDATE_MEMBER':return{...state,members:state.members.map(m=>m.id===action.payload.id?{...m,...action.payload}:m)};
-    case 'ADD_LOAN':return{...state,loans:[...state.loans,{...action.payload,id:Date.now(),status:'active'}]};
-    case 'REPAY_LOAN':{
-      const loans=state.loans.map(l=>l.id===action.payload.id?{...l,paidAmount:(l.paidAmount||0)+action.payload.amount,status:(l.paidAmount||0)+action.payload.amount>=l.amount?'settled':'active'}:l);
-      return{...state,loans};
-    }
-    case 'UPDATE_SETTINGS':return{...state,...action.payload};
-    case 'SET_QR':return{...state,qrImage:action.payload};
-    case 'SET_UPI':return{...state,upiId:action.payload};
-    case 'CHANGE_PASS':return{...state,adminPass:action.payload};
-    case 'IMPORT_DATA':return{...INIT_STATE,...action.payload};
-    case 'RESET':return{...INIT_STATE};
-    default:return state;
-  }
-}
-
-// ── Icons ─────────────────────────────────────────────────────
-const Icon=({n,s=18,c})=>{
-  const ic={
-    dashboard:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>,
-    members:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.85"/></svg>,
-    history:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>,
-    settings:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
-    export:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
-    payment:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>,
-    loans:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>,
-    plus:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>,
-    check:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>,
-    x:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>,
-    logout:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>,
-    eye:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
-    eyeoff:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>,
-    trash:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>,
-    edit:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-    upload:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
-    download:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-    lock:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>,
-    bell:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,
-    game:<svg width={s} height={s} fill="none" stroke={c||"currentColor"} strokeWidth="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>,
-  };
-  return ic[n]||null;
-};
-
-// ── Toast ─────────────────────────────────────────────────────
-function Toast({msg,onDone}){useEffect(()=>{const t=setTimeout(onDone,2600);return()=>clearTimeout(t)},[]);return<div className="toast">✦ {msg}</div>;}
-
-// ── Modal ─────────────────────────────────────────────────────
-function Modal({title,onClose,children,wide}){
-  useEffect(()=>{const h=e=>e.key==='Escape'&&onClose();window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
-  return(
-    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal" style={wide?{maxWidth:540}:{}}>
-        <div className="flex items-center justify-between mb-4">
-          <h3 style={{fontFamily:'Syne',fontSize:16,fontWeight:800}}>{title}</h3>
-          <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon n="x" s={14}/></button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// ── Avatar ────────────────────────────────────────────────────
-function Avatar({member,size=44,radius=12}){
-  return(
-    <div className="avatar" style={{width:size,height:size,borderRadius:radius,background:`${member.color}18`,color:member.color}}>
-      {member.photo?<img src={member.photo} alt={member.name}/>:<span style={{fontSize:size*.44}}>{member.emoji}</span>}
-    </div>
-  );
-}
-
-// ── Add Transaction Modal ─────────────────────────────────────
-function AddTxModal({state,dispatch,onClose,toast,defaultType}){
-  const{members,monthlyAmount}=state;
-  const[txType,setTxType]=useState(defaultType||'contribution');
-  const[amt,setAmt]=useState(txType==='contribution'?monthlyAmount:'');
-  const[desc,setDesc]=useState('');
-  const[date,setDate]=useState(today());
-  const[cat,setCat]=useState('Food 🍕');
-  const[memberId,setMemberId]=useState('');
-  const[selMembers,setSelMembers]=useState(members.map(m=>m.id));
-  const[note,setNote]=useState('');
-
-  const tm=tmk();
-  const toggleSel=id=>setSelMembers(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
-
-  const typeConfig=[
-    {k:'contribution',icon:'💳',label:'Monthly'},
-    {k:'deposit',icon:'💰',label:'Deposit'},
-    {k:'expense',icon:'💸',label:'Expense'},
-    {k:'withdrawal',icon:'🏧',label:'Withdraw'},
-    {k:'loan_given',icon:'🤝',label:'Loan Out'},
-    {k:'loan_repay',icon:'✅',label:'Loan In'},
-  ];
-
-  const isIncome=['contribution','deposit','loan_repay'].includes(txType);
-
-  const submit=()=>{
-    const a=Number(amt);
-    if(!a||a<=0)return;
-    if(txType==='contribution'){
-      selMembers.forEach(id=>{
-        const m=members.find(x=>x.id===id);
-        dispatch({type:'ADD_TX',payload:{txType:'contribution',memberId:id,memberName:m.name,amount:a,date,description:`${m.name}${note?` — ${note}`:' contribution'}`,monthKey:`${tm}-${id}`}});
-      });
-      toast(`${selMembers.length} contribution(s) added`);
-    } else if(txType==='expense'){
-      dispatch({type:'ADD_TX',payload:{txType:'expense',amount:a,description:`💸 ${desc||cat}`,date,category:cat}});
-      toast('Expense recorded');
-    } else if(txType==='deposit'){
-      const m=memberId?members.find(x=>x.id==memberId):null;
-      dispatch({type:'ADD_TX',payload:{txType:'deposit',memberId:m?.id,memberName:m?.name,amount:a,date,description:`💰 ${m?m.name+' — ':''}${desc||'Extra deposit'}`}});
-      toast('Deposit recorded');
-    } else if(txType==='withdrawal'){
-      const m=memberId?members.find(x=>x.id==memberId):null;
-      dispatch({type:'ADD_TX',payload:{txType:'withdrawal',memberId:m?.id,memberName:m?.name,amount:a,date,description:`🏧 ${m?m.name+' — ':''}${desc||'Withdrawal'}`}});
-      toast('Withdrawal recorded');
-    } else if(txType==='loan_given'){
-      const m=memberId?members.find(x=>x.id==memberId):null;
-      dispatch({type:'ADD_TX',payload:{txType:'loan_given',memberId:m?.id,memberName:m?.name,amount:a,date,description:`🤝 Loan to ${m?m.name:(desc||'Member')}`}});
-      if(m) dispatch({type:'ADD_LOAN',payload:{borrowerId:m.id,borrowerName:m.name,amount:a,date,note:desc,paidAmount:0}});
-      toast('Loan recorded');
-    } else if(txType==='loan_repay'){
-      const m=memberId?members.find(x=>x.id==memberId):null;
-      dispatch({type:'ADD_TX',payload:{txType:'loan_repay',memberId:m?.id,memberName:m?.name,amount:a,date,description:`✅ Repayment from ${m?m.name:(desc||'Member')}`}});
-      toast('Repayment recorded');
-    }
-    onClose();
-  };
-
-  return(
-    <Modal title="➕ Add Transaction" onClose={onClose} wide>
-      <div className="type-grid mb-4">
-        {typeConfig.map(t=>(
-          <div key={t.k} className={`type-btn ${txType===t.k?'selected':''}`} onClick={()=>{setTxType(t.k);if(t.k==='contribution')setAmt(monthlyAmount);}}>
-            <div className="t-icon">{t.icon}</div>
-            <div className="t-label">{t.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {txType==='contribution'&&(
-        <>
-          <div className="mb-3"><label className="label">Amount per Member (₹)</label><input className="input" type="number" value={amt} onChange={e=>setAmt(e.target.value)}/></div>
-          <div className="mb-3"><label className="label">Note</label><input className="input" placeholder="Optional note" value={note} onChange={e=>setNote(e.target.value)}/></div>
-          <div className="mb-3">
-            <label className="label">Select Members</label>
-            <div style={{display:'flex',flexDirection:'column',gap:7}}>
-              {members.map(m=>(
-                <div key={m.id} onClick={()=>toggleSel(m.id)} style={{display:'flex',alignItems:'center',gap:10,padding:'9px 12px',background:selMembers.includes(m.id)?'rgba(59,130,246,0.08)':'rgba(255,255,255,0.02)',border:`1px solid ${selMembers.includes(m.id)?'rgba(59,130,246,0.3)':'var(--border)'}`,borderRadius:11,cursor:'pointer',transition:'all .15s'}}>
-                  <Avatar member={m} size={28} radius={7}/>
-                  <span style={{flex:1,fontWeight:600,fontSize:14}}>{m.name}</span>
-                  <div style={{width:18,height:18,borderRadius:5,border:`2px solid ${selMembers.includes(m.id)?'var(--g1)':'var(--border2)'}`,background:selMembers.includes(m.id)?'var(--g1)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                    {selMembers.includes(m.id)&&<Icon n="check" s={10} c="#fff"/>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      {['deposit','withdrawal','loan_given','loan_repay'].includes(txType)&&(
-        <>
-          <div className="mb-3"><label className="label">Amount (₹)</label><input className="input" type="number" placeholder="Enter amount" value={amt} onChange={e=>setAmt(e.target.value)}/></div>
-          <div className="mb-3">
-            <label className="label">Member (optional)</label>
-            <select className="input" value={memberId} onChange={e=>setMemberId(e.target.value)}>
-              <option value="">— No specific member —</option>
-              {members.map(m=><option key={m.id} value={m.id}>{m.emoji} {m.name}</option>)}
-            </select>
-          </div>
-          <div className="mb-3"><label className="label">Description</label><input className="input" placeholder={txType==='deposit'?'Reason for deposit':txType==='withdrawal'?'Reason for withdrawal':'Note'} value={desc} onChange={e=>setDesc(e.target.value)}/></div>
-        </>
-      )}
-
-      {txType==='expense'&&(
-        <>
-          <div className="mb-3"><label className="label">Amount (₹)</label><input className="input" type="number" placeholder="Enter amount" value={amt} onChange={e=>setAmt(e.target.value)}/></div>
-          <div className="mb-3">
-            <label className="label">Category</label>
-            <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-              {EXP_CATS.map(c=>(
-                <button key={c} className={`btn btn-sm ${cat===c?'btn-danger':'btn-ghost'}`} onClick={()=>setCat(c)} style={{fontSize:12}}>{c}</button>
-              ))}
-            </div>
-          </div>
-          <div className="mb-3"><label className="label">Description</label><input className="input" placeholder="What was it for?" value={desc} onChange={e=>setDesc(e.target.value)}/></div>
-        </>
-      )}
-
-      <div className="mb-4"><label className="label">Date</label><input className="input" type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>
-
-      <div style={{padding:'10px 14px',background:'rgba(255,255,255,0.03)',borderRadius:11,border:'1px solid var(--border)',marginBottom:16,fontSize:13,color:'var(--text2)'}}>
-        <span style={{color:isIncome?'var(--green2)':'var(--red2)',fontWeight:700,fontFamily:'Syne'}}>{isIncome?'+ Income':'- Deduction'}</span> · {TX_TYPES[txType]?.label}
-      </div>
-
-      <div style={{display:'flex',gap:10}}>
-        <button className="btn btn-ghost" style={{flex:1}} onClick={onClose}>Cancel</button>
-        <button className="btn btn-primary" style={{flex:1}} onClick={submit} disabled={!amt}>Add {fmt(amt||0)}</button>
-      </div>
-    </Modal>
-  );
-}
-
-// ── Dashboard ─────────────────────────────────────────────────
-function Dashboard({state,isAdmin,dispatch,toast}){
-  const{transactions,members,monthlyAmount,monthlyContributions}=state;
-  const[showTx,setShowTx]=useState(false);
-  const[txType,setTxType]=useState('contribution');
-
-  const balance=useMemo(()=>transactions.reduce((s,t)=>['contribution','deposit','loan_repay'].includes(t.txType)?s+t.amount:s-t.amount,0),[transactions]);
-  const totalIn=useMemo(()=>transactions.filter(t=>['contribution','deposit','loan_repay'].includes(t.txType)).reduce((s,t)=>s+t.amount,0),[transactions]);
-  const totalOut=useMemo(()=>transactions.filter(t=>['expense','withdrawal','loan_given'].includes(t.txType)).reduce((s,t)=>s+t.amount,0),[transactions]);
-  const tm=tmk();
-  const thisMonthIn=transactions.filter(t=>t.date.startsWith(tm)&&['contribution','deposit'].includes(t.txType)).reduce((s,t)=>s+t.amount,0);
-
-  const now=new Date();
-  const chartData=[];
-  for(let i=5;i>=0;i--){
-    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    const inc=transactions.filter(t=>t.date.startsWith(k)&&['contribution','deposit'].includes(t.txType)).reduce((s,t)=>s+t.amount,0);
-    chartData.push({label:MONTHS[d.getMonth()],value:inc});
-  }
-  const maxC=Math.max(...chartData.map(d=>d.value),1);
-
-  const nextMs=MILESTONES.find(m=>m.amount>balance);
-  const prevMs=MILESTONES.filter(m=>m.amount<=balance).slice(-1)[0];
-  const msP=nextMs?((balance-(prevMs?.amount||0))/(nextMs.amount-(prevMs?.amount||0)))*100:100;
-  const unpaid=members.filter(m=>!monthlyContributions[`${tm}-${m.id}`]);
-
-  const openTx=type=>{setTxType(type);setShowTx(true);};
-
-  return(
-    <div>
-      <div className="hero-balance">
-        <div style={{position:'relative',zIndex:1}}>
-          <div style={{fontSize:11,color:'var(--text2)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.1em',marginBottom:8}}>💰 Total Fund Balance</div>
-          <div className="hero-amount">{fmt(balance)}</div>
-          <div style={{display:'flex',gap:20,marginTop:14,flexWrap:'wrap'}}>
-            {[['Total In',totalIn,'var(--green2)','⬆'],['Total Out',totalOut,'var(--red2)','⬇'],['This Month',thisMonthIn,'var(--g2)','📅']].map(([l,v,c,ic])=>(
-              <div key={l}><div style={{fontSize:11,color:'var(--text3)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.05em',marginBottom:2}}>{ic} {l}</div><div style={{color:c,fontWeight:800,fontFamily:'Syne',fontSize:17}}>{fmt(v)}</div></div>
-            ))}
-          </div>
-          {isAdmin&&(
-            <div style={{display:'flex',gap:8,marginTop:18,flexWrap:'wrap'}}>
-              <button className="btn btn-primary btn-sm" onClick={()=>openTx('contribution')}><Icon n="plus" s={13}/> Contribution</button>
-              <button className="btn btn-success btn-sm" onClick={()=>openTx('deposit')}>💰 Deposit</button>
-              <button className="btn btn-danger btn-sm" onClick={()=>openTx('expense')}>💸 Expense</button>
-              <button className="btn btn-orange btn-sm" onClick={()=>openTx('withdrawal')}>🏧 Withdraw</button>
-              <button className="btn btn-purple btn-sm" onClick={()=>openTx('loan_given')}>🤝 Loan</button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="grid-4 mb-6">
-        {[['Members',members.length,'👥','var(--g2)'],['Monthly Target',fmt(members.length*monthlyAmount),'📊','var(--green2)'],['Transactions',transactions.length,'🔄','#60a5fa'],['Per Member',fmt(monthlyAmount),'💎','var(--purple)']].map(([l,v,ic,c])=>(
-          <div key={l} className="stat-card"><div className="stat-icon" style={{background:`${c}18`}}>{ic}</div><div className="stat-label">{l}</div><div className="stat-value" style={{color:c}}>{v}</div></div>
-        ))}
-      </div>
-
-      <div className="grid-2 mb-6">
-        <div className="card">
-          <div className="section-title">Monthly <span className="accent">Activity</span></div>
-          <div className="chart-wrap">
-            <div className="chart-bars">
-              {chartData.map((d,i)=>(
-                <div key={i} className="chart-bar-wrap">
-                  <div style={{position:'relative',width:'100%',height:'calc(100% - 26px)',display:'flex',alignItems:'flex-end'}}>
-                    <div className="chart-bar" style={{height:`${Math.max(4,(d.value/maxC)*100)}%`,background:'linear-gradient(180deg,var(--g1),rgba(59,130,246,0.2))',boxShadow:d.value>0?'0 0 10px rgba(59,130,246,0.3)':''}}/>
-                    <span className="chart-label">{d.label}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="section-title">Next <span className="accent">Milestone</span></div>
-          {nextMs?(
-            <>
-              <div style={{textAlign:'center',marginBottom:14}}>
-                <div style={{fontSize:38,marginBottom:6}}>{nextMs.emoji}</div>
-                <div style={{fontFamily:'Syne',fontSize:17,fontWeight:800}}>{nextMs.label}</div>
-                <div style={{color:'var(--text2)',fontSize:13}}>{fmt(nextMs.amount)}</div>
-              </div>
-              <div className="progress-wrap mb-2"><div className="progress-bar" style={{width:`${Math.min(msP,100)}%`}}/></div>
-              <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--text3)'}}><span>{fmt(balance)}</span><span>{Math.round(msP)}%</span><span>{fmt(nextMs.amount)}</span></div>
-              <div style={{marginTop:10,textAlign:'center',fontSize:12,color:'var(--text2)'}}>{fmt(nextMs.amount-balance)} to go!</div>
-            </>
-          ):<div style={{textAlign:'center',padding:20}}><div style={{fontSize:38}}>👑</div><div style={{fontFamily:'Syne',fontSize:16,fontWeight:800,marginTop:8}}>All Milestones Unlocked!</div></div>}
-        </div>
-      </div>
-
-      <div className="card mb-6">
-        <div className="section-title">Recent <span className="accent">Transactions</span></div>
-        {transactions.length===0
-          ?<div className="empty"><div className="empty-icon">📭</div><div>No transactions yet</div></div>
-          :transactions.slice(-8).reverse().map((tx,i)=>{
-            const cfg=TX_TYPES[tx.txType]||TX_TYPES.contribution;
-            const isIn=['contribution','deposit','loan_repay'].includes(tx.txType);
-            return(
-              <div key={i} className="tx-row">
-                <div className="tx-icon" style={{background:isIn?'rgba(16,185,129,0.12)':'rgba(239,68,68,0.12)'}}>{cfg.icon}</div>
-                <div style={{flex:1}}>
-                  <div style={{fontWeight:600,fontSize:14}}>{tx.description}</div>
-                  <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>{tx.date} · {cfg.label}</div>
-                </div>
-                <div style={{fontFamily:'Syne',fontWeight:800,fontSize:16,color:isIn?'var(--green2)':'var(--red2)'}}>{cfg.sign}{fmt(tx.amount)}</div>
-              </div>
-            );
-          })
-        }
-      </div>
-
-      {isAdmin&&unpaid.length>0&&(
-        <div className="card" style={{borderColor:'rgba(239,68,68,0.2)',background:'rgba(239,68,68,0.03)'}}>
-          <div className="flex items-center gap-3 mb-3"><Icon n="bell" s={15} c="var(--red2)"/><span style={{fontFamily:'Syne',fontWeight:700,color:'var(--red2)'}}>Pending This Month</span></div>
-          <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:8}}>
-            {unpaid.map(m=>(
-              <div key={m.id} style={{display:'flex',alignItems:'center',gap:6,padding:'4px 10px',background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.2)',borderRadius:99}}>
-                <Avatar member={m} size={18} radius={5}/><span style={{fontSize:12,fontWeight:600,color:'var(--red2)'}}>{m.name}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{fontSize:12,color:'var(--text2)'}}>{unpaid.length} member{unpaid.length>1?'s':''} haven't contributed this month.</div>
-        </div>
-      )}
-
-      {showTx&&<AddTxModal state={state} dispatch={dispatch} onClose={()=>setShowTx(false)} toast={toast} defaultType={txType}/>}
-    </div>
-  );
-}
-
-// ── Members Page ──────────────────────────────────────────────
-function MembersPage({state,isAdmin,dispatch,toast}){
-  const{members,transactions,monthlyAmount,monthlyContributions}=state;
-  const[showAdd,setShowAdd]=useState(false);
-  const[editM,setEditM]=useState(null);
-  const tm=tmk();const now=new Date();
-
-  const getMemberTotal=id=>transactions.filter(t=>['contribution','deposit'].includes(t.txType)&&t.memberId===id).reduce((s,t)=>s+t.amount,0);
-  const isPaid=id=>!!monthlyContributions[`${tm}-${id}`];
-
-  const markPaid=m=>{
-    dispatch({type:'ADD_TX',payload:{txType:'contribution',memberId:m.id,memberName:m.name,amount:monthlyAmount,date:today(),description:`${m.name} — ${MONTHS[now.getMonth()]} contribution`,monthKey:`${tm}-${m.id}`}});
-    toast(`${m.name} marked as paid`);
-  };
-  const remove=m=>{
-    if(!confirm(`Remove ${m.name}?`))return;
-    dispatch({type:'REMOVE_MEMBER',payload:m.id});toast(`${m.name} removed`);
-  };
-
-  return(
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <div className="section-title" style={{margin:0}}>Fund <span className="accent">Members</span> ({members.length})</div>
-        {isAdmin&&<button className="btn btn-primary btn-sm" onClick={()=>setShowAdd(true)}><Icon n="plus" s={13}/> Add Member</button>}
-      </div>
-      <div style={{display:'flex',flexDirection:'column',gap:12,marginBottom:24}}>
-        {members.map(m=>{
-          const total=getMemberTotal(m.id);
-          const paid=isPaid(m.id);
-          const cnt=transactions.filter(t=>t.txType==='contribution'&&t.memberId===m.id).length;
-          return(
-            <div key={m.id} className="card" style={{padding:18,borderColor:paid?'rgba(59,130,246,0.2)':'var(--border)'}}>
-              <div className="flex items-center gap-4" style={{flexWrap:'wrap'}}>
-                <Avatar member={m} size={50} radius={13}/>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:2}}>{m.name}</div>
-                  <div style={{fontSize:12,color:'var(--text2)'}}>Joined {m.joined} · {cnt} contributions</div>
-                  <div className="progress-wrap mt-2" style={{maxWidth:180}}><div className="progress-bar" style={{width:`${Math.min((total/(monthlyAmount*12))*100,100)}%`,background:`linear-gradient(90deg,${m.color},${m.color}88)`}}/></div>
-                </div>
-                <div style={{textAlign:'right'}}>
-                  <div style={{fontFamily:'Syne',fontWeight:800,fontSize:19,color:m.color}}>{fmt(total)}</div>
-                  <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>total contributed</div>
-                  <span className={`badge ${paid?'badge-green':'badge-red'}`}>{paid?'✓ Paid':'✗ Pending'}</span>
-                </div>
-                {isAdmin&&(
-                  <div style={{display:'flex',flexDirection:'column',gap:6}}>
-                    {!paid&&<button className="btn btn-success btn-sm" onClick={()=>markPaid(m)}>Mark Paid</button>}
-                    <button className="btn btn-ghost btn-sm" onClick={()=>setEditM(m)}><Icon n="edit" s={12}/> Edit</button>
-                    <button className="btn btn-danger btn-sm" onClick={()=>remove(m)}><Icon n="trash" s={12}/></button>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {showAdd&&<MemberModal dispatch={dispatch} toast={toast} onClose={()=>setShowAdd(false)} members={members}/>}
-      {editM&&<MemberModal member={editM} dispatch={dispatch} toast={toast} onClose={()=>setEditM(null)} members={members}/>}
-    </div>
-  );
-}
-
-function MemberModal({member,dispatch,toast,onClose,members}){
-  const editing=!!member;
-  const[name,setName]=useState(member?.name||'');
-  const[emoji,setEmoji]=useState(member?.emoji||'🦁');
-  const[color,setColor]=useState(member?.color||'#3b82f6');
-  const[photo,setPhoto]=useState(member?.photo||null);
-  const[photoUrl,setPhotoUrl]=useState(typeof member?.photo==='string'&&member?.photo.startsWith('http')?member.photo:'');
-  const[tab,setTab]=useState(member?.photo?(member.photo.startsWith('data:'))?'upload':'url':'emoji');
-  const fileRef=useRef();
-  const handleFile=async e=>{const f=e.target.files[0];if(!f)return;try{const d=await readFile(f);setPhoto(d);}catch{}};
-  const finalPhoto=tab==='upload'?photo:tab==='url'&&photoUrl?photoUrl:null;
-  const preview={id:0,name:name||'Preview',emoji,color,photo:finalPhoto};
-  const submit=()=>{
-    if(!name.trim())return;
-    if(editing){dispatch({type:'UPDATE_MEMBER',payload:{id:member.id,name:name.trim(),emoji,color,photo:finalPhoto}});toast(`${name} updated`);}
-    else{
-      const now=new Date();
-      dispatch({type:'ADD_MEMBER',payload:{id:Date.now(),name:name.trim(),emoji,color,photo:finalPhoto,joined:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`}});
-      toast(`${name} added`);
-    }
-    onClose();
-  };
-  return(
-    <Modal title={editing?'✏️ Edit Member':'👤 Add Member'} onClose={onClose} wide>
-      <div style={{display:'flex',gap:14,marginBottom:14}}>
-        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}><Avatar member={preview} size={64} radius={16}/><div style={{fontSize:10,color:'var(--text3)'}}>Preview</div></div>
-        <div style={{flex:1}}>
-          <div className="mb-3"><label className="label">Name</label><input className="input" placeholder="Member name" value={name} onChange={e=>setName(e.target.value)} autoFocus={!editing}/></div>
-          <div><label className="label">Color</label><div style={{display:'flex',gap:7,flexWrap:'wrap'}}>{COLORS.map(c=><div key={c} onClick={()=>setColor(c)} style={{width:26,height:26,borderRadius:8,background:c,cursor:'pointer',border:`3px solid ${color===c?'white':'transparent'}`,transition:'border .12s'}}/>)}</div></div>
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="label">Profile Photo</label>
-        <div style={{display:'flex',gap:6,marginBottom:10}}>{['emoji','upload','url'].map(t=><button key={t} className={`btn btn-sm ${tab===t?'btn-primary':'btn-ghost'}`} onClick={()=>setTab(t)}>{t==='emoji'?'Emoji':t==='upload'?'Upload':'URL'}</button>)}</div>
-        {tab==='emoji'&&<div style={{display:'flex',gap:7,flexWrap:'wrap'}}>{EMOJIS.map(e=><div key={e} onClick={()=>setEmoji(e)} style={{width:38,height:38,borderRadius:10,background:emoji===e?'rgba(59,130,246,0.15)':'rgba(255,255,255,0.04)',border:`2px solid ${emoji===e?'var(--g1)':'var(--border)'}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer'}}>{e}</div>)}</div>}
-        {tab==='upload'&&<div className="upload-area" onClick={()=>fileRef.current?.click()}>{photo&&photo.startsWith('data:')?<img src={photo} style={{width:72,height:72,borderRadius:10,objectFit:'cover'}}/>:<><Icon n="upload" s={22} c="var(--text3)"/><div style={{fontSize:13,color:'var(--text3)',marginTop:6}}>Click to upload</div></>}<input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={handleFile}/></div>}
-        {tab==='url'&&<input className="input" placeholder="https://example.com/photo.jpg" value={photoUrl} onChange={e=>setPhotoUrl(e.target.value)}/>}
-      </div>
-      <div style={{display:'flex',gap:10}}><button className="btn btn-ghost" style={{flex:1}} onClick={onClose}>Cancel</button><button className="btn btn-primary" style={{flex:1}} onClick={submit}>{editing?'Save Changes':'Add Member'}</button></div>
-    </Modal>
-  );
-}
-
-// ── Loans Page ────────────────────────────────────────────────
-function LoansPage({state,isAdmin,dispatch,toast}){
-  const{loans=[],members,transactions}=state;
-  const[showAdd,setShowAdd]=useState(false);
-  const activeLoans=loans.filter(l=>l.status==='active');
-  const settled=loans.filter(l=>l.status==='settled');
-  const totalOut=activeLoans.reduce((s,l)=>s+(l.amount-(l.paidAmount||0)),0);
-
-  return(
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <div className="section-title" style={{margin:0}}>💳 Loan <span className="accent">Tracker</span></div>
-        {isAdmin&&<button className="btn btn-purple btn-sm" onClick={()=>setShowAdd(true)}><Icon n="plus" s={13}/> New Loan</button>}
-      </div>
-
-      {totalOut>0&&(
-        <div className="card mb-6" style={{borderColor:'rgba(167,139,250,0.3)',background:'rgba(167,139,250,0.05)'}}>
-          <div style={{fontSize:11,color:'var(--text2)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>Total Outstanding</div>
-          <div style={{fontFamily:'Syne',fontSize:36,fontWeight:800,color:'var(--purple)'}}>{fmt(totalOut)}</div>
-          <div style={{fontSize:13,color:'var(--text2)',marginTop:4}}>{activeLoans.length} active loan{activeLoans.length!==1?'s':''}</div>
-        </div>
-      )}
-
-      {activeLoans.length>0&&(
-        <>
-          <div className="section-title" style={{fontSize:15}}>Active Loans</div>
-          {activeLoans.map(l=>{
-            const remaining=l.amount-(l.paidAmount||0);
-            const prog=((l.paidAmount||0)/l.amount)*100;
-            return(
-              <div key={l.id} className="loan-card">
-                <div className="flex items-center justify-between mb-2">
-                  <div style={{display:'flex',alignItems:'center',gap:8}}>
-                    {members.find(m=>m.id===l.borrowerId)&&<Avatar member={members.find(m=>m.id===l.borrowerId)} size={32} radius={8}/>}
-                    <div>
-                      <div style={{fontWeight:700,fontFamily:'Syne',fontSize:14}}>{l.borrowerName||'Unknown'}</div>
-                      <div style={{fontSize:11,color:'var(--text2)'}}>{l.date}{l.note?` · ${l.note}`:''}</div>
-                    </div>
-                  </div>
-                  <div style={{textAlign:'right'}}>
-                    <div style={{fontFamily:'Syne',fontWeight:800,color:'var(--purple)',fontSize:16}}>{fmt(remaining)}</div>
-                    <div style={{fontSize:11,color:'var(--text3)'}}>of {fmt(l.amount)}</div>
-                  </div>
-                </div>
-                <div className="progress-wrap mb-2"><div className="progress-bar" style={{width:`${prog}%`,background:'linear-gradient(90deg,var(--purple),#c4b5fd)'}}/></div>
-                {isAdmin&&(
-                  <div style={{display:'flex',gap:8,marginTop:8}}>
-                    <button className="btn btn-success btn-sm" onClick={()=>{
-                      const amt=prompt(`Repayment amount for ${l.borrowerName} (max ${fmt(remaining)}):`);
-                      if(!amt)return;
-                      const n=Number(amt);
-                      if(!n||n<=0||n>remaining)return toast('Invalid amount');
-                      dispatch({type:'REPAY_LOAN',payload:{id:l.id,amount:n}});
-                      dispatch({type:'ADD_TX',payload:{txType:'loan_repay',memberId:l.borrowerId,memberName:l.borrowerName,amount:n,date:today(),description:`✅ Repayment from ${l.borrowerName}`}});
-                      toast('Repayment recorded');
-                    }}>Record Repayment</button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </>
-      )}
-
-      {settled.length>0&&(
-        <>
-          <div className="section-title mt-4" style={{fontSize:15}}>Settled Loans</div>
-          {settled.map(l=>(
-            <div key={l.id} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 14px',background:'rgba(16,185,129,0.04)',border:'1px solid rgba(16,185,129,0.15)',borderRadius:12,marginBottom:8}}>
-              {members.find(m=>m.id===l.borrowerId)&&<Avatar member={members.find(m=>m.id===l.borrowerId)} size={30} radius={7}/>}
-              <div style={{flex:1}}><div style={{fontWeight:700,fontSize:13}}>{l.borrowerName}</div><div style={{fontSize:11,color:'var(--text2)'}}>{l.date}</div></div>
-              <span className="badge badge-green">✓ Settled</span>
-              <div style={{fontFamily:'Syne',fontWeight:800,fontSize:14,color:'var(--green2)'}}>{fmt(l.amount)}</div>
-            </div>
-          ))}
-        </>
-      )}
-
-      {loans.length===0&&<div className="empty"><div className="empty-icon">🤝</div><div>No loans recorded yet</div></div>}
-      {showAdd&&<AddTxModal state={state} dispatch={dispatch} onClose={()=>setShowAdd(false)} toast={toast} defaultType="loan_given"/>}
-    </div>
-  );
-}
-
-// ── History Page ──────────────────────────────────────────────
-function HistoryPage({state,isAdmin,dispatch,toast}){
-  const{transactions}=state;
-  const[filter,setFilter]=useState('all');
-  let running=0;
-  const withBal=transactions.map(tx=>{const isIn=['contribution','deposit','loan_repay'].includes(tx.txType);running+=isIn?tx.amount:-tx.amount;return{...tx,running,isIn}});
-  const filtered=withBal.filter(t=>filter==='all'||t.txType===filter).reverse();
-  return(
-    <div>
-      <div className="flex items-center justify-between mb-6" style={{flexWrap:'wrap',gap:12}}>
-        <div className="section-title" style={{margin:0}}>Transaction <span className="accent">History</span></div>
-        <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
-          {['all','contribution','deposit','expense','withdrawal','loan_given','loan_repay'].map(f=>(
-            <button key={f} className={`btn btn-sm ${filter===f?'btn-primary':'btn-ghost'}`} onClick={()=>setFilter(f)} style={{fontSize:11}}>
-              {f==='all'?'All':TX_TYPES[f]?.label||f}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="card">
-        {filtered.length===0
-          ?<div className="empty"><div className="empty-icon">📭</div><div>No transactions found</div></div>
-          :<div className="table-wrap">
-            <table>
-              <thead><tr><th>Date</th><th>Description</th><th>Type</th><th style={{textAlign:'right'}}>Amount</th><th style={{textAlign:'right'}}>Balance</th>{isAdmin&&<th></th>}</tr></thead>
-              <tbody>
-                {filtered.map((tx,i)=>{
-                  const cfg=TX_TYPES[tx.txType]||TX_TYPES.contribution;
-                  return(
-                    <tr key={i}>
-                      <td style={{color:'var(--text2)',whiteSpace:'nowrap',fontSize:12}}>{tx.date}</td>
-                      <td style={{fontWeight:500}}>{tx.description}</td>
-                      <td><span className={`badge ${cfg.badge}`}>{cfg.icon} {cfg.label}</span></td>
-                      <td style={{textAlign:'right',fontFamily:'Syne',fontWeight:700,color:tx.isIn?'var(--green2)':'var(--red2)'}}>{cfg.sign}{fmt(tx.amount)}</td>
-                      <td style={{textAlign:'right',fontFamily:'Syne',fontWeight:600,color:'var(--text2)',fontSize:13}}>{fmt(tx.running)}</td>
-                      {isAdmin&&<td><button className="btn btn-danger btn-icon btn-sm" onClick={()=>{if(confirm('Delete this transaction?')){dispatch({type:'DELETE_TX',payload:tx.id});toast('Deleted');}}}><Icon n="trash" s={12}/></button></td>}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        }
-      </div>
-    </div>
-  );
-}
-
-// ── Export Page ───────────────────────────────────────────────
-function ExportPage({state,isAdmin,dispatch,toast}){
-  const[importing,setImporting]=useState(false);
-  const fileRef=useRef();
-  const{transactions,members,loans=[]}=state;
-  const balance=transactions.reduce((s,t)=>['contribution','deposit','loan_repay'].includes(t.txType)?s+t.amount:s-t.amount,0);
-
-  // JSON Export (full backup)
-  const exportJSON=()=>{
-    const data=JSON.stringify(state,null,2);
-    const blob=new Blob([data],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download=`a2dv-fund-backup-${today()}.json`;a.click();
-    URL.revokeObjectURL(url);toast('JSON backup downloaded!');
-  };
-
-  // CSV Export
-  const exportCSV=()=>{
-    const header=['Date','Description','Type','Amount','Balance','Member'];
-    let running=0;
-    const rows=transactions.map(tx=>{
-      const isIn=['contribution','deposit','loan_repay'].includes(tx.txType);
-      running+=isIn?tx.amount:-tx.amount;
-      return[tx.date,`"${tx.description}"`,TX_TYPES[tx.txType]?.label||tx.txType,(isIn?'+':'-')+tx.amount,running,tx.memberName||''];
+// ─── APP LAUNCH ──────────────────────
+async function launchApp() {
+  $('setup-overlay').classList.remove('on');
+  $('loading').style.display='flex';
+  $('rbadge').textContent = ROLE==='admin' ? '⚡ Admin' : '👁 Viewer';
+  if (ROLE==='admin') {
+    ['sb-s','mob-s','add-e-btn','add-loan-btn','add-mem-s','notif-wrap','hero-admin-actions'].forEach(id=>{
+      const el=$(id); if(el) el.style.display = id==='add-mem-s'?'block':'';
     });
-    const csv=[header,...rows].map(r=>r.join(',')).join('\n');
-    const blob=new Blob([csv],{type:'text/csv'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download=`a2dv-transactions-${today()}.csv`;a.click();
-    URL.revokeObjectURL(url);toast('CSV downloaded!');
-  };
+  }
+  // Set today's date on date inputs
+  const today = todayStr();
+  ['ex-dt','loan-dt','dep-dt','repay-dt'].forEach(id=>{ const el=$(id); if(el) el.value=today; });
+  await loadAll();
+  startListeners();
+  $('loading').classList.add('hide');
+  setTimeout(()=>{ $('loading').style.display='none'; $('loading').classList.remove('hide'); },500);
+  $('app').classList.add('on');
+  navigate('dashboard');
+}
 
-  // PDF Export (via print)
-  const exportPDF=()=>{
-    const totalIn=transactions.filter(t=>['contribution','deposit','loan_repay'].includes(t.txType)).reduce((s,t)=>s+t.amount,0);
-    const totalOut=transactions.filter(t=>['expense','withdrawal','loan_given'].includes(t.txType)).reduce((s,t)=>s+t.amount,0);
-    let running=0;
-    const txRows=transactions.slice(-50).map(tx=>{
-      const isIn=['contribution','deposit','loan_repay'].includes(tx.txType);
-      running+=isIn?tx.amount:-tx.amount;
-      return`<tr><td>${tx.date}</td><td>${tx.description}</td><td>${TX_TYPES[tx.txType]?.label||''}</td><td style="color:${isIn?'#10b981':'#ef4444'}">${isIn?'+':'-'}${fmt(tx.amount)}</td><td>${fmt(running)}</td></tr>`;
+// ─── DATA LOADING ────────────────────
+async function loadAll() {
+  syncBar(true);
+  try {
+    const [settSnap, memSnap, conSnap, expSnap, loanSnap, depSnap] = await Promise.all([
+      getDoc(doc(db,'settings','config')),
+      getDocs(query(collection(db,'members'), orderBy('order'))),
+      getDocs(collection(db,'contributions')),
+      getDocs(query(collection(db,'expenses'), orderBy('expense_date','desc'))),
+      getDocs(query(collection(db,'loans'), orderBy('date','desc'))),
+      getDocs(query(collection(db,'deposits'), orderBy('date','desc'))),
+    ]);
+    if (settSnap.exists()) {
+      DATA.settings = settSnap.data();
+      const fn = DATA.settings.fund_name || 'A2DV Boys';
+      $('hdr-fund-name').textContent = fn;
+      document.title = fn + ' Fund';
+    }
+    DATA.members = memSnap.docs.filter(d=>d.data().active!==false).map(d=>({id:d.id,...d.data()}));
+    DATA.contributions = {};
+    conSnap.docs.forEach(d=>{ const x=d.data(); if(!DATA.contributions[x.month_key]) DATA.contributions[x.month_key]={}; DATA.contributions[x.month_key][x.member_id]=x.paid; });
+    DATA.expenses = expSnap.docs.map(d=>({id:d.id,...d.data()}));
+    DATA.loans = loanSnap.docs.map(d=>({id:d.id,...d.data()}));
+    DATA.deposits = depSnap.docs.map(d=>({id:d.id,...d.data()}));
+    populateLoanMemberSelect();
+    populateDepositMemberSelect();
+  } catch(e) { console.error('loadAll error:',e); toast('Sync error — '+e.message,'e'); }
+  finally { syncBar(false); }
+}
+
+function startListeners() {
+  UNSUBS.forEach(u=>u()); UNSUBS=[];
+  UNSUBS.push(
+    onSnapshot(doc(db,'settings','config'), snap=>{ if(snap.exists()){ DATA.settings=snap.data(); const fn=DATA.settings.fund_name||'A2DV Boys'; $('hdr-fund-name').textContent=fn; document.title=fn+' Fund'; renderPage(CP); } }),
+    onSnapshot(collection(db,'members'), snap=>{ DATA.members=snap.docs.filter(d=>d.data().active!==false).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0)); populateLoanMemberSelect(); populateDepositMemberSelect(); renderPage(CP); }),
+    onSnapshot(collection(db,'contributions'), snap=>{ DATA.contributions={}; snap.docs.forEach(d=>{ const x=d.data(); if(!DATA.contributions[x.month_key]) DATA.contributions[x.month_key]={}; DATA.contributions[x.month_key][x.member_id]=x.paid; }); renderPage(CP); }),
+    onSnapshot(query(collection(db,'expenses'), orderBy('expense_date','desc')), snap=>{ DATA.expenses=snap.docs.map(d=>({id:d.id,...d.data()})); renderPage(CP); }),
+    onSnapshot(query(collection(db,'loans'), orderBy('date','desc')), snap=>{ DATA.loans=snap.docs.map(d=>({id:d.id,...d.data()})); renderPage(CP); }),
+    onSnapshot(query(collection(db,'deposits'), orderBy('date','desc')), snap=>{ DATA.deposits=snap.docs.map(d=>({id:d.id,...d.data()})); renderPage(CP); }),
+  );
+}
+
+window.syncAll = async (showMsg=true) => {
+  const icon=$('ri'); icon.style.animation='spin .7s linear infinite';
+  try { await loadAll(); renderPage(CP); if(showMsg) toast('Data synced! ✓'); }
+  catch { toast('Sync failed','e'); }
+  finally { setTimeout(()=>icon.style.animation='',700); }
+};
+
+// ─── COMPUTED TOTALS ─────────────────
+function getTotals() {
+  const monthly = parseFloat(DATA.settings?.monthly_amount||200);
+  let income = 0;
+  Object.values(DATA.contributions).forEach(md=>Object.values(md).forEach(p=>{ if(p) income+=monthly; }));
+  // Add deposits
+  DATA.deposits.forEach(d=>{ income+=parseFloat(d.amount||0); });
+  // Add loan repayments back to income
+  DATA.loans.forEach(l=>{ income+=(parseFloat(l.repaid_amount)||0); });
+  const spent = DATA.expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  // Subtract outstanding loans from balance
+  const loansOut = DATA.loans.filter(l=>l.status!=='settled').reduce((s,l)=>s+(parseFloat(l.amount||0)-parseFloat(l.repaid_amount||0)),0);
+  const balance = income - spent - loansOut;
+  return { income, spent, balance, monthly, loansOut };
+}
+
+function getLast6() {
+  const { monthly } = getTotals();
+  const now = new Date();
+  return Array.from({length:6},(_,i)=>{
+    const d = new Date(now.getFullYear(), now.getMonth()-5+i, 1);
+    const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const md = DATA.contributions[mk]||{};
+    const inc = Object.values(md).filter(Boolean).length * monthly
+      + DATA.deposits.filter(dep=>dep.date?.startsWith(mk)).reduce((s,dep)=>s+parseFloat(dep.amount||0),0);
+    const exp = DATA.expenses.filter(e=>e.expense_date?.startsWith(mk)).reduce((s,e)=>s+parseFloat(e.amount||0),0);
+    return { label:MONTHS[d.getMonth()], inc, exp };
+  });
+}
+
+// ─── NAVIGATION ──────────────────────
+window.navigate = pg => {
+  CP=pg;
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  $('pg-'+pg).classList.add('on');
+  document.querySelectorAll('.nv,.mnv').forEach(b=>b.classList.toggle('on',b.dataset.pg===pg));
+  renderPage(pg);
+  window.scrollTo(0,0);
+};
+function renderPage(pg) {
+  if(pg==='dashboard') renderDashboard();
+  else if(pg==='members') renderMembers();
+  else if(pg==='expenses') renderExpenses();
+  else if(pg==='loans') renderLoans();
+  else if(pg==='history') renderHistory();
+  else if(pg==='milestones') renderMilestones();
+  else if(pg==='settings') renderSettings();
+}
+
+// ─── DASHBOARD ───────────────────────
+function renderDashboard() {
+  const {income,spent,balance,monthly,loansOut} = getTotals();
+  const mk = nowKey();
+  const cmd = DATA.contributions[mk]||{};
+  const paid = DATA.members.filter(m=>cmd[m.id]).length;
+  const pending = DATA.members.length - paid;
+  const activeLoans = DATA.loans.filter(l=>l.status!=='settled');
+  const loanTotal = activeLoans.reduce((s,l)=>s+(parseFloat(l.amount||0)-parseFloat(l.repaid_amount||0)),0);
+
+  $('h-bal').innerHTML=`<span>${fmt(balance)}</span>`;
+  $('h-st').innerHTML=balance>=0?`<span style="color:#86efac">▲ Fund is healthy</span>`:`<span style="color:#fca5a5">▼ Fund in deficit</span>`;
+  $('h-inc').textContent=fmt(income);
+  $('h-sp').textContent=fmt(spent);
+  $('h-mo').textContent=`${paid}/${DATA.members.length} paid`;
+  $('h-mem').textContent=DATA.members.length;
+  $('sc1').textContent=fmt(DATA.members.length*monthly);
+  $('sc2').textContent=`${paid}/${DATA.members.length}`;
+  $('sc-loans').textContent=fmt(loanTotal);
+  $('sc4').textContent=DATA.expenses.length;
+
+  // Notification badges
+  const showBadge = pending>0;
+  const nb=$('nv-b'), mb=$('mob-b'), nd=$('notif-dot');
+  if(nb){nb.style.display=showBadge?'':'none'; nb.textContent=pending;}
+  if(mb){mb.style.display=(showBadge&&ROLE==='admin')?'':'none';}
+  if(nd){nd.style.display=showBadge?'':'none';}
+
+  const l6=getLast6();
+  renderBars('ci',l6.map(m=>({l:m.label,v:m.inc})),'var(--gold)');
+  renderBars('ce',l6.map(m=>({l:m.label,v:m.exp})),'var(--red)');
+
+  // Month status mini list
+  $('d-ml').innerHTML=DATA.members.map(m=>{
+    const p=cmd[m.id];
+    return `<div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;background:rgba(255,255,255,0.025);margin-bottom:6px;transition:all .2s;" onmouseenter="this.style.background='rgba(255,255,255,0.04)'" onmouseleave="this.style.background='rgba(255,255,255,0.025)'">
+      <div class="av ${p?'av-p':'av-u'}" style="width:34px;height:34px;font-size:13px;">${m.avatar}</div>
+      <span style="flex:1;font-weight:600;font-size:13px;">${m.name}</span>
+      <span style="font-size:12px;font-weight:700;color:${p?'var(--green)':'var(--red)'};">${p?fmt(monthly):'Pending'}</span>
+      <div style="width:8px;height:8px;border-radius:50%;background:${p?'var(--green)':'var(--red)'};flex-shrink:0;"></div>
+    </div>`;
+  }).join('');
+
+  // Recent transactions
+  const events = buildAllEvents().slice(0,6);
+  if(!events.length) {
+    $('d-recent-tx').innerHTML='<div class="empty" style="padding:24px;"><div class="empty-ico" style="font-size:28px;">📭</div><div class="empty-t">No transactions yet</div></div>';
+    return;
+  }
+  $('d-recent-tx').innerHTML=events.map(e=>txRowHTML(e)).join('');
+}
+
+function renderBars(id,data,color) {
+  const el=$(id); if(!el)return;
+  const max=Math.max(...data.map(d=>d.v),1);
+  el.innerHTML=data.map(d=>{
+    const h=max>0?Math.max(4,(d.v/max)*82):4;
+    return `<div class="cb-w"><div class="cb-b" style="background:${color};height:${h}px;opacity:.75;"></div><div class="cb-l">${d.l}</div></div>`;
+  }).join('');
+}
+
+// ─── MEMBERS ─────────────────────────
+function renderMembers() {
+  const {monthly} = getTotals();
+  const mk=nowKey(), cmd=DATA.contributions[mk]||{};
+  const paid=DATA.members.filter(m=>cmd[m.id]).length;
+  $('m-sub').textContent=`${DATA.members.length} members · ${fmt(monthly)}/month · ${DATA.members.length-paid} pending this month`;
+  if(!DATA.members.length) { $('m-list').innerHTML='<div class="empty"><div class="empty-ico">👥</div><div class="empty-t">No members added yet</div></div>'; return; }
+  $('m-list').innerHTML=DATA.members.map((m,i)=>{
+    const isPaid=!!cmd[m.id];
+    const totalPaid=Object.values(DATA.contributions).reduce((s,md)=>s+(md[m.id]?monthly:0),0)
+      + DATA.deposits.filter(d=>d.member_id===m.id).reduce((s,d)=>s+parseFloat(d.amount||0),0);
+    const mLoans=DATA.loans.filter(l=>l.member_id===m.id&&l.status!=='settled');
+    const loanBal=mLoans.reduce((s,l)=>s+(parseFloat(l.amount||0)-parseFloat(l.repaid_amount||0)),0);
+    const isA=ROLE==='admin';
+    return `<div class="card chov mc" style="animation:fadeUp ${0.04+i*.06}s ease both;">
+      <div class="av ${isPaid?'av-p':'av-u'}">${m.avatar}</div>
+      <div class="mi">
+        <div class="mn">${m.name}</div>
+        <div class="mt2">Contributed: ${fmt(totalPaid)}${loanBal>0?` · Loan: ${fmt(loanBal)}`:''}</div>
+        <div class="mini-prog" style="max-width:160px;"><div class="mini-fill" style="width:${Math.min((totalPaid/(monthly*12))*100,100)}%;background:${isPaid?'linear-gradient(90deg,var(--green),#4ade80)':'linear-gradient(90deg,var(--gold),var(--gold-l))'}"></div></div>
+      </div>
+      <div class="ma">
+        ${isA
+          ?`<button class="pb ${isPaid?'pb-p':'pb-u'}" onclick="togglePay('${m.id}','${mk}')" id="pb-${m.id}">${isPaid?'✓ Paid':'Mark Paid'}</button>`
+          :`<span class="badge ${isPaid?'badge-g':'badge-r'}">${isPaid?'✓ Paid':'Pending'}</span>`}
+        ${isA?`<div class="macts">
+          <button class="it" style="color:var(--sub)" title="Edit" onclick="openEditMem('${m.id}','${m.name}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          ${DATA.members.length>1?`<button class="it" style="color:var(--red)" title="Remove" onclick="removeMember('${m.id}','${m.name}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>`:''}
+        </div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.togglePay = async (memberId, monthKey) => {
+  if(ROLE!=='admin') return;
+  const btn=$('pb-'+memberId); if(btn){btn.disabled=true;btn.textContent='…';}
+  try {
+    const cur = DATA.contributions[monthKey]?.[memberId];
+    await setDoc(doc(db,'contributions',`${monthKey}_${memberId}`),{member_id:memberId,month_key:monthKey,paid:!cur,updated_at:new Date().toISOString()});
+    const m=DATA.members.find(x=>x.id===memberId);
+    toast((!cur)?`${m?.name} marked paid ✓`:`${m?.name} payment removed`,'i');
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+window.addMember = async () => {
+  const name=$('new-mem').value.trim();
+  if(!name){toast('Enter member name','e');return;}
+  if(DATA.members.find(m=>m.name.toLowerCase()===name.toLowerCase())){toast('Member already exists','e');return;}
+  try {
+    const id=uid();
+    await setDoc(doc(db,'members',id),{name,avatar:name[0].toUpperCase(),order:DATA.members.length+1,active:true,created_at:new Date().toISOString()});
+    $('new-mem').value=''; toast(`${name} added! 🎉`);
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+window.removeMember = async (id,name) => {
+  if(!confirm(`Remove ${name} from the fund?\nThis will not delete their payment history.`)) return;
+  try { await updateDoc(doc(db,'members',id),{active:false}); toast(`${name} removed`,'e'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.openEditMem = (id,name) => { $('em-id').value=id; $('em-name').value=name; openModal('edit-mem-modal'); };
+window.saveEditMem = async () => {
+  const id=$('em-id').value, name=$('em-name').value.trim();
+  if(!name) return;
+  try { await updateDoc(doc(db,'members',id),{name,avatar:name[0].toUpperCase()}); closeModal('edit-mem-modal'); toast('Name updated!'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ─── EXPENSES ────────────────────────
+function renderExpenses() {
+  const total=DATA.expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  $('e-sub').textContent=`${DATA.expenses.length} record${DATA.expenses.length!==1?'s':''} · Total: ${fmt(total)}`;
+  if(!DATA.expenses.length){$('e-list').innerHTML='';$('e-empty').style.display='block';return;}
+  $('e-empty').style.display='none';
+  $('e-list').innerHTML=DATA.expenses.map((e,i)=>{
+    const cc=CAT_COLOR[e.category]||'var(--gold)', em=CAT_EMOJI[e.category]||'💸';
+    return `<div class="card chov ec" style="animation:fadeUp ${0.04+i*.04}s ease both;">
+      <div style="width:40px;height:40px;border-radius:12px;background:${cc}18;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${em}</div>
+      <div class="ei">
+        <div class="ed">${e.description}</div>
+        <div class="em">${fmtDate(e.expense_date)} · <span style="color:${cc};font-weight:700;">${e.category||'General'}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div class="ea">−${fmt(e.amount)}</div>
+        ${ROLE==='admin'?`<button class="it" style="color:var(--red);" onclick="delExpense('${e.id}')" title="Delete"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.saveExpense = async () => {
+  const desc=$('ex-d').value.trim(), amt=+$('ex-a').value, cat=$('ex-c').value, dt=$('ex-dt').value;
+  if(!desc||!amt||amt<=0||!dt){toast('Fill all fields','e');return;}
+  const btn=$('sv-exp'); btn.disabled=true; btn.textContent='Saving…';
+  try {
+    await setDoc(doc(db,'expenses',uid()),{description:desc,amount:amt,category:cat,expense_date:dt,created_at:new Date().toISOString()});
+    closeModal('exp-modal'); toast(`${fmt(amt)} expense recorded!`);
+  } catch(e){toast('Error: '+e.message,'e');}
+  finally{btn.disabled=false; btn.textContent='Record Expense';}
+};
+window.delExpense = async id => {
+  if(!confirm('Delete this expense?')) return;
+  try { await deleteDoc(doc(db,'expenses',id)); toast('Expense deleted','e'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.openExpModal = () => openModal('exp-modal');
+
+// ─── LOANS ───────────────────────────
+function renderLoans() {
+  const active=DATA.loans.filter(l=>l.status!=='settled');
+  const settled=DATA.loans.filter(l=>l.status==='settled');
+  const total=active.reduce((s,l)=>s+(parseFloat(l.amount||0)-parseFloat(l.repaid_amount||0)),0);
+  const lsub=$('loans-sub'); if(lsub) lsub.textContent=`${active.length} active · ${fmt(total)} outstanding`;
+  const lsum=$('loans-summary'); if(lsum) lsum.style.display=DATA.loans.length?'block':'none';
+  const lt=$('loan-total'), lc=$('loan-count');
+  if(lt) lt.textContent=fmt(total);
+  if(lc) lc.textContent=active.length;
+  if(!DATA.loans.length){$('loans-list').innerHTML='';$('loans-empty').style.display='block';return;}
+  $('loans-empty').style.display='none';
+  let html='';
+  if(active.length) {
+    html+=`<div style="font-size:10px;color:var(--sub);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;">Active Loans</div>`;
+    html+=active.map((l,i)=>{
+      const remaining=parseFloat(l.amount||0)-parseFloat(l.repaid_amount||0);
+      const pct=l.amount>0?((parseFloat(l.repaid_amount)||0)/parseFloat(l.amount||0))*100:0;
+      const m=DATA.members.find(x=>x.id===l.member_id)||{name:l.member_name||'Unknown',avatar:'?'};
+      return `<div class="loan-card" style="animation:fadeUp ${0.05+i*.06}s ease both;">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+          <div class="av av-u" style="width:38px;height:38px;font-size:14px;flex-shrink:0;">${m.avatar}</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;">${m.name}</div>
+            <div style="font-size:11px;color:var(--sub);margin-top:2px;">${fmtDate(l.date)}${l.note?` · ${l.note}`:''}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;color:var(--purple);">${fmt(remaining)}</div>
+            <div style="font-size:10px;color:var(--sub);">of ${fmt(l.amount)}</div>
+          </div>
+        </div>
+        <div class="pbar"><div class="pfill" style="background:linear-gradient(90deg,var(--purple),#c4b5fd);width:${pct}%;"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;">
+          <div style="font-size:11px;color:var(--sub);">Repaid: ${fmt(l.repaid_amount||0)} · ${pct.toFixed(0)}%</div>
+          ${ROLE==='admin'?`<div style="display:flex;gap:6px;">
+            <button class="btn bg bxs" onclick="openRepayModal('${l.id}','${m.name}',${remaining})">+ Repayment</button>
+            <button class="it" style="color:var(--red)" onclick="deleteLoan('${l.id}')" title="Delete loan"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+          </div>`:''}
+        </div>
+      </div>`;
     }).join('');
-    const memberRows=members.map(m=>{
-      const tot=transactions.filter(t=>['contribution','deposit'].includes(t.txType)&&t.memberId===m.id).reduce((s,t)=>s+t.amount,0);
-      return`<tr><td>${m.emoji} ${m.name}</td><td>${m.joined}</td><td>${fmt(tot)}</td></tr>`;
+  }
+  if(settled.length) {
+    html+=`<div style="font-size:10px;color:var(--sub);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:16px 0 9px;">Settled Loans</div>`;
+    html+=settled.map(l=>{
+      const m=DATA.members.find(x=>x.id===l.member_id)||{name:l.member_name||'Unknown',avatar:'?'};
+      return `<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;opacity:.7;">
+        <div class="av av-p" style="width:36px;height:36px;font-size:13px;">${m.avatar}</div>
+        <div style="flex:1;"><div style="font-weight:600;font-size:13px;">${m.name}</div><div style="font-size:11px;color:var(--sub);">${fmtDate(l.date)}</div></div>
+        <span class="badge badge-g">✓ Settled</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:800;color:var(--green);">${fmt(l.amount)}</div>
+      </div>`;
     }).join('');
-    const win=window.open('','_blank');
-    win.document.write(`<!DOCTYPE html><html><head><title>A2DV Fund Report</title><style>body{font-family:Arial,sans-serif;padding:32px;color:#111;max-width:900px;margin:0 auto}h1{font-size:26px;margin-bottom:4px}h2{font-size:16px;color:#555;margin:24px 0 10px;border-bottom:1px solid #ddd;padding-bottom:4px}.summary{display:flex;gap:24px;margin:20px 0;flex-wrap:wrap}.box{background:#f9f9f9;border-radius:8px;padding:14px 20px;min-width:140px}.box-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.06em}.box-val{font-size:22px;font-weight:700;margin-top:4px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:#f3f3f3;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#666}td{padding:8px 10px;border-bottom:1px solid #eee}.green{color:#10b981}.red{color:#ef4444}footer{margin-top:32px;font-size:11px;color:#aaa;text-align:center}@media print{body{padding:16px}}</style></head><body>
-      <h1>💰 ${state.fundName}</h1><div style="color:#888;font-size:13px">Generated on ${today()} · A2DV Boys Fund Manager</div>
-      <div class="summary"><div class="box"><div class="box-label">Balance</div><div class="box-val">${fmt(balance)}</div></div><div class="box"><div class="box-label">Total In</div><div class="box-val green">${fmt(totalIn)}</div></div><div class="box"><div class="box-label">Total Out</div><div class="box-val red">${fmt(totalOut)}</div></div><div class="box"><div class="box-label">Members</div><div class="box-val">${members.length}</div></div></div>
-      <h2>Members</h2><table><thead><tr><th>Name</th><th>Joined</th><th>Total Contributed</th></tr></thead><tbody>${memberRows}</tbody></table>
-      <h2>Recent Transactions (last 50)</h2><table><thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Balance</th></tr></thead><tbody>${txRows}</tbody></table>
-      <footer>A2DV Boys Fund Manager · Exported ${today()}</footer>
-      </body></html>`);
-    win.document.close();
-    setTimeout(()=>win.print(),400);
-    toast('PDF report opened!');
-  };
-
-  // Import
-  const handleImport=async e=>{
-    const f=e.target.files[0];if(!f)return;
-    try{
-      const text=await f.text();
-      const data=JSON.parse(text);
-      if(!data.members||!data.transactions)throw new Error('Invalid file');
-      if(!confirm('This will replace ALL current data. Continue?'))return;
-      dispatch({type:'IMPORT_DATA',payload:data});
-      toast('Data imported successfully!');
-    }catch{toast('Import failed — invalid file');}
-    e.target.value='';
-  };
-
-  const exportOptions=[
-    {icon:'🗃️',label:'JSON Backup',desc:'Full backup — all data, settings & members. Use to restore.',color:'var(--g2)',fn:exportJSON,btnLabel:'Download JSON'},
-    {icon:'📊',label:'CSV Spreadsheet',desc:'Transaction history as spreadsheet — open in Excel or Google Sheets.',color:'var(--green2)',fn:exportCSV,btnLabel:'Download CSV'},
-    {icon:'📄',label:'PDF Report',desc:'Formatted report with summary, members & transactions — ready to print.',color:'var(--red2)',fn:exportPDF,btnLabel:'Generate PDF'},
-  ];
-
-  return(
-    <div>
-      <div className="section-title mb-6">📤 Export & <span className="accent">Backup</span></div>
-
-      <div className="card mb-4">
-        <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:4}}>Fund Summary</div>
-        <div style={{fontSize:13,color:'var(--text2)',marginBottom:16}}>Current snapshot of your fund data</div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10}}>
-          {[['Members',members.length,'👥'],['Transactions',transactions.length,'🔄'],['Active Loans',loans.filter(l=>l.status==='active').length,'🤝']].map(([l,v,ic])=>(
-            <div key={l} style={{textAlign:'center',padding:'12px 8px',background:'rgba(255,255,255,0.03)',borderRadius:11,border:'1px solid var(--border)'}}>
-              <div style={{fontSize:22,marginBottom:4}}>{ic}</div>
-              <div style={{fontFamily:'Syne',fontWeight:800,fontSize:20,color:'var(--g2)'}}>{v}</div>
-              <div style={{fontSize:11,color:'var(--text3)'}}>{l}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="card mb-4">
-        <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:16}}>📥 Export Data</div>
-        {exportOptions.map(opt=>(
-          <div key={opt.label} className="export-option">
-            <div className="export-icon" style={{background:`${opt.color}18`}}>{opt.icon}</div>
-            <div style={{flex:1}}>
-              <div style={{fontWeight:700,fontFamily:'Syne',fontSize:14}}>{opt.label}</div>
-              <div style={{fontSize:12,color:'var(--text2)',marginTop:2}}>{opt.desc}</div>
-            </div>
-            <button className="btn btn-ghost btn-sm" onClick={opt.fn} style={{flexShrink:0,fontSize:12}}><Icon n="download" s={13}/> {opt.btnLabel}</button>
-          </div>
-        ))}
-      </div>
-
-      {isAdmin&&(
-        <div className="card" style={{borderColor:'rgba(240,180,41,0.2)'}}>
-          <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:4,color:'var(--gold)'}}>📥 Import / Restore</div>
-          <div style={{fontSize:13,color:'var(--text2)',marginBottom:16}}>Restore from a previously exported JSON backup file. This will replace all current data.</div>
-          <div className="upload-area" onClick={()=>fileRef.current?.click()} style={{borderColor:'rgba(240,180,41,0.25)'}}>
-            <Icon n="upload" s={28} c="var(--gold)"/>
-            <div style={{fontSize:13,color:'var(--text2)',marginTop:8}}>Click to choose JSON backup file</div>
-            <div style={{fontSize:11,color:'var(--text3)',marginTop:4}}>Only .json files exported from this app</div>
-            <input ref={fileRef} type="file" accept=".json" style={{display:'none'}} onChange={handleImport}/>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  }
+  $('loans-list').innerHTML=html;
 }
 
-// ── Payment Page ──────────────────────────────────────────────
-function PaymentPage({state,isAdmin,dispatch,toast}){
-  const{qrImage,upiId}=state;
-  const[newUpi,setNewUpi]=useState(upiId);
-  const[uploadQr,setUploadQr]=useState(null);
-  const[urlQr,setUrlQr]=useState('');
-  const[qrTab,setQrTab]=useState('upload');
-  const fileRef=useRef();
-  const handleFile=async e=>{const f=e.target.files[0];if(!f)return;try{const d=await readFile(f);setUploadQr(d);}catch{}};
-  const saveQr=()=>{
-    const img=qrTab==='upload'?uploadQr:urlQr;
-    if(img){dispatch({type:'SET_QR',payload:img});toast('QR saved');}
-    if(newUpi!==upiId){dispatch({type:'SET_UPI',payload:newUpi});toast('UPI ID saved');}
-  };
-  return(
-    <div>
-      <div className="section-title mb-6">💳 <span className="accent">Payment</span></div>
-      {(qrImage||upiId)&&(
-        <div className="card mb-6" style={{textAlign:'center',borderColor:'rgba(59,130,246,0.2)'}}>
-          <div style={{fontFamily:'Syne',fontWeight:800,fontSize:17,marginBottom:4}}>Pay to {state.fundName}</div>
-          {upiId&&<div style={{color:'var(--text2)',fontSize:13,marginBottom:14}}>UPI: <span style={{color:'var(--g2)',fontWeight:700}}>{upiId}</span></div>}
-          {qrImage&&<div style={{maxWidth:220,margin:'0 auto',padding:10,background:'white',borderRadius:14}}><img src={qrImage} style={{width:'100%',borderRadius:10}}/></div>}
-          {upiId&&<div style={{marginTop:14}}><a href={`upi://pay?pa=${upiId}&pn=${encodeURIComponent(state.fundName)}`} className="btn btn-primary">📲 Open in UPI App</a></div>}
-        </div>
-      )}
-      {isAdmin&&(
-        <div className="card">
-          <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:14}}>Manage Payment Details</div>
-          <div className="mb-3"><label className="label">UPI ID</label><input className="input" placeholder="yourname@upi" value={newUpi} onChange={e=>setNewUpi(e.target.value)}/></div>
-          <div className="mb-4">
-            <label className="label">QR Code</label>
-            <div style={{display:'flex',gap:8,marginBottom:10}}>{['upload','url'].map(t=><button key={t} className={`btn btn-sm ${qrTab===t?'btn-primary':'btn-ghost'}`} onClick={()=>setQrTab(t)}>{t==='upload'?'📁 Upload':'🔗 URL'}</button>)}</div>
-            {qrTab==='upload'&&<div className="upload-area" onClick={()=>fileRef.current?.click()}>{uploadQr?<img src={uploadQr} style={{width:80,height:80,borderRadius:10,objectFit:'contain'}}/>:<><Icon n="upload" s={22} c="var(--text3)"/><div style={{fontSize:13,color:'var(--text3)',marginTop:6}}>Upload QR Image</div></>}<input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={handleFile}/></div>}
-            {qrTab==='url'&&<input className="input" placeholder="https://example.com/qr.png" value={urlQr} onChange={e=>setUrlQr(e.target.value)}/>}
-          </div>
-          {qrImage&&<div className="mb-4"><label className="label">Current QR</label><div style={{maxWidth:100,padding:6,background:'white',borderRadius:10,display:'inline-block'}}><img src={qrImage} style={{width:'100%',borderRadius:6}}/></div><div><button className="btn btn-danger btn-sm mt-2" onClick={()=>{dispatch({type:'SET_QR',payload:null});toast('QR removed');}}>Remove</button></div></div>}
-          <button className="btn btn-primary" onClick={saveQr}>Save Payment Details</button>
-        </div>
-      )}
-      {!isAdmin&&!qrImage&&!upiId&&<div className="empty"><div className="empty-icon">🔒</div><div>No payment details set yet</div></div>}
+function populateLoanMemberSelect() {
+  const sel=$('loan-mem'); if(!sel) return;
+  sel.innerHTML=DATA.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+}
+function populateDepositMemberSelect() {
+  const sel=$('dep-mem'); if(!sel) return;
+  sel.innerHTML=`<option value="">— General Deposit —</option>`+DATA.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+}
+window.saveLoan = async () => {
+  const memberId=$('loan-mem').value, amt=+$('loan-amt').value, note=$('loan-note').value.trim(), dt=$('loan-dt').value;
+  if(!memberId||!amt||amt<=0||!dt){toast('Fill all fields','e');return;}
+  const m=DATA.members.find(x=>x.id===memberId);
+  const btn=$('sv-loan'); btn.disabled=true; btn.textContent='Saving…';
+  try {
+    await setDoc(doc(db,'loans',uid()),{member_id:memberId,member_name:m?.name||'Unknown',amount:amt,repaid_amount:0,note,date:dt,status:'active',created_at:new Date().toISOString()});
+    closeModal('loan-modal'); $('loan-amt').value=''; $('loan-note').value=''; toast(`Loan of ${fmt(amt)} recorded for ${m?.name}!`);
+  } catch(e){toast('Error: '+e.message,'e');}
+  finally{btn.disabled=false; btn.textContent='Record Loan';}
+};
+window.openRepayModal = (loanId,memberName,remaining) => {
+  $('repay-loan-id').value=loanId;
+  $('repay-info').innerHTML=`<strong style="color:var(--text)">${memberName}</strong><br/>Outstanding: <strong style="color:var(--purple)">${fmt(remaining)}</strong>`;
+  $('repay-amt').value=''; $('repay-dt').value=todayStr();
+  openModal('repay-modal');
+};
+window.saveRepayment = async () => {
+  const loanId=$('repay-loan-id').value, amt=+$('repay-amt').value, dt=$('repay-dt').value;
+  if(!amt||amt<=0||!dt){toast('Enter valid amount','e');return;}
+  const loan=DATA.loans.find(l=>l.id===loanId);
+  if(!loan){toast('Loan not found','e');return;}
+  const remaining=parseFloat(loan.amount||0)-parseFloat(loan.repaid_amount||0);
+  if(amt>remaining){toast(`Max repayment is ${fmt(remaining)}`,'e');return;}
+  try {
+    const newRepaid=(parseFloat(loan.repaid_amount)||0)+amt;
+    const settled=newRepaid>=parseFloat(loan.amount||0);
+    await updateDoc(doc(db,'loans',loanId),{repaid_amount:newRepaid,status:settled?'settled':'active',last_repayment:dt});
+    closeModal('repay-modal'); toast(`${fmt(amt)} repayment recorded!${settled?' Loan fully settled! 🎉':''}`);
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+window.deleteLoan = async id => {
+  if(!confirm('Delete this loan record?')) return;
+  try { await deleteDoc(doc(db,'loans',id)); toast('Loan deleted','e'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ─── DEPOSITS ────────────────────────
+window.saveDeposit = async () => {
+  const memberId=$('dep-mem').value, amt=+$('dep-amt').value, note=$('dep-note').value.trim(), dt=$('dep-dt').value;
+  if(!amt||amt<=0||!dt){toast('Enter amount and date','e');return;}
+  const m=DATA.members.find(x=>x.id===memberId)||null;
+  try {
+    await setDoc(doc(db,'deposits',uid()),{member_id:memberId||null,member_name:m?.name||'General',amount:amt,note,date:dt,created_at:new Date().toISOString()});
+    closeModal('deposit-modal'); $('dep-amt').value=''; $('dep-note').value='';
+    toast(`${fmt(amt)} deposit recorded!`);
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ─── HISTORY ─────────────────────────
+let histFilter='all';
+window.setHistFilter = (f,btn) => {
+  histFilter=f;
+  document.querySelectorAll('#hist-filters .type-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderHistory();
+};
+function buildAllEvents() {
+  const {monthly} = getTotals();
+  const events=[];
+  // Contributions
+  Object.entries(DATA.contributions).forEach(([mk,md])=>{
+    const [yr,mo]=mk.split('-');
+    Object.entries(md).forEach(([mid,paid])=>{
+      if(paid){const m=DATA.members.find(x=>x.id===mid)||{name:'Member'};
+        events.push({type:'income',subtype:'contribution',desc:`${m.name} — ${MONTHS[parseInt(mo)-1]} ${yr}`,amt:monthly,date:`${mk}-01`});}
+    });
+  });
+  // Deposits
+  DATA.deposits.forEach(d=>events.push({type:'income',subtype:'deposit',desc:`${d.member_name||'General'} Deposit${d.note?` — ${d.note}`:''}`,amt:parseFloat(d.amount||0),date:d.date}));
+  // Expenses
+  DATA.expenses.forEach(e=>events.push({type:'expense',subtype:'expense',desc:e.description,amt:parseFloat(e.amount||0),date:e.expense_date,category:e.category}));
+  // Loans
+  DATA.loans.forEach(l=>events.push({type:'loan',subtype:'loan_out',desc:`Loan to ${l.member_name||'Member'}${l.note?` — ${l.note}`:''}`,amt:parseFloat(l.amount||0),date:l.date}));
+  // Repayments
+  DATA.loans.filter(l=>l.repaid_amount>0).forEach(l=>events.push({type:'income',subtype:'repayment',desc:`Loan repayment — ${l.member_name||'Member'}`,amt:parseFloat(l.repaid_amount||0),date:l.last_repayment||l.date}));
+  return events.sort((a,b)=>new Date(b.date)-new Date(a.date));
+}
+function txRowHTML(e,runBal) {
+  const isIn=e.type==='income';
+  const ico = e.subtype==='contribution'?'💳':e.subtype==='deposit'?'💰':e.subtype==='expense'?`${CAT_EMOJI[e.category]||'💸'}`:e.subtype==='loan_out'?'🤝':'✅';
+  return `<div class="card chov tc">
+    <div style="width:38px;height:38px;border-radius:11px;background:${isIn?'rgba(34,197,94,0.1)':'rgba(239,68,68,0.1)'};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${ico}</div>
+    <div class="ti"><div class="td">${e.desc}</div><div class="tdt">${fmtDate(e.date)}</div></div>
+    <div class="tr">
+      <div class="ta" style="color:${isIn?'var(--green)':'var(--red)'};">${isIn?'+':'-'}${fmt(e.amt)}</div>
+      ${runBal!==undefined?`<div class="tb">Bal: ${fmt(runBal)}</div>`:''}
     </div>
-  );
+  </div>`;
+}
+function renderHistory() {
+  let events=buildAllEvents();
+  if(histFilter==='income') events=events.filter(e=>e.type==='income');
+  else if(histFilter==='expense') events=events.filter(e=>e.type==='expense');
+  else if(histFilter==='loan') events=events.filter(e=>e.type==='loan');
+  // Compute running balance
+  const {balance}=getTotals();
+  let run=balance;
+  const withR=events.map(e=>{const r=run; run-=(e.type==='income'?e.amt:-e.amt); return{...e,run:r};});
+  const el=$('tx-list'), empty=$('tx-empty');
+  if(!withR.length){el.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  el.innerHTML=withR.map(e=>txRowHTML(e,e.run)).join('');
 }
 
-// ── Settings Page ─────────────────────────────────────────────
-function SettingsPage({state,dispatch,toast,isAdmin}){
-  const[amt,setAmt]=useState(state.monthlyAmount);
-  const[fundName,setFundName]=useState(state.fundName);
-  const[oldP,setOldP]=useState('');const[newP,setNewP]=useState('');const[confP,setConfP]=useState('');
-  const[passErr,setPassErr]=useState('');const[showOld,setShowOld]=useState(false);const[showNew,setShowNew]=useState(false);
-  if(!isAdmin)return<div className="card" style={{textAlign:'center',padding:48}}><div style={{fontSize:44,marginBottom:12}}>🔐</div><div style={{fontFamily:'Syne',fontSize:18,fontWeight:800,marginBottom:8}}>Admin Only</div><div style={{color:'var(--text2)',fontSize:14}}>Settings are only accessible to admin.</div></div>;
-  const saveSettings=()=>{dispatch({type:'UPDATE_SETTINGS',payload:{monthlyAmount:Number(amt),fundName}});toast('Settings saved!');};
-  const changePass=()=>{
-    setPassErr('');
-    if(oldP!==state.adminPass){setPassErr('Current password incorrect');return;}
-    if(newP.length<6){setPassErr('Min 6 characters');return;}
-    if(newP!==confP){setPassErr('Passwords do not match');return;}
-    dispatch({type:'CHANGE_PASS',payload:newP});toast('Password changed!');setOldP('');setNewP('');setConfP('');
-  };
-  return(
-    <div>
-      <div className="section-title mb-6">⚙️ <span className="accent">Settings</span></div>
-      <div className="card mb-4">
-        <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:14}}>Fund Settings</div>
-        <div className="mb-3"><label className="label">Fund Name</label><input className="input" value={fundName} onChange={e=>setFundName(e.target.value)}/></div>
-        <div className="mb-4"><label className="label">Monthly Contribution (₹)</label><input className="input" type="number" value={amt} onChange={e=>setAmt(e.target.value)}/><div style={{fontSize:11,color:'var(--text3)',marginTop:5}}>Monthly target: {fmt(state.members.length*Number(amt||0))}</div></div>
-        <button className="btn btn-primary" onClick={saveSettings}>Save Settings</button>
+// ─── MILESTONES ──────────────────────
+function renderMilestones() {
+  const {balance}=getTotals();
+  const next=MILESTONES.find(m=>m>balance)||MILESTONES[MILESTONES.length-1];
+  const prev=MILESTONES.slice().reverse().find(m=>m<=balance)||0;
+  const pct=next>prev?Math.min(((balance-prev)/(next-prev))*100,100):100;
+  $('ms-n').textContent=fmt(next);
+  $('ms-t').textContent=`${fmt(Math.max(balance,0))} / ${fmt(next)} — ${pct.toFixed(1)}% there!`;
+  $('ms-f').style.width=pct+'%';
+  $('ms-r').textContent=`${fmt(Math.max(next-balance,0))} more to go`;
+  $('ms-list').innerHTML=MILESTONES.map((m,i)=>{
+    const done=balance>=m, isCur=m===next;
+    const p=isCur&&next>prev?pct:0;
+    return `<div class="card chov mscard" style="opacity:${done?1:.62};border-color:${isCur?'rgba(212,175,55,0.3)':'var(--cb)'};animation:fadeUp ${0.04+i*.07}s ease both;background:${isCur?'rgba(212,175,55,0.04)':'var(--card)'}">
+      <div class="msi">
+        <div class="ms-ico" style="background:${done?'linear-gradient(135deg,var(--gold),var(--gold-l))':'rgba(255,255,255,0.05)'};">${done?MS_EMOJI[i]:'🔒'}</div>
+        <div style="flex:1;">
+          <div class="ms-nm" style="color:${done?'var(--gold)':isCur?'#fff':'var(--text)'}">${fmt(m)}</div>
+          <div class="ms-sb">${done?`✅ Achieved! (${MS_EMOJI[i]})`:isCur?`${pct.toFixed(0)}% complete — you're close!`:'Locked'}</div>
+          ${isCur?`<div class="pbar" style="margin-top:8px;"><div class="pfill" style="background:linear-gradient(90deg,var(--gold),var(--gold-l));width:${p}%;"></div></div>`:''}
+        </div>
+        ${done?'<div style="font-size:22px;">🏆</div>':''}
       </div>
-      <div className="card mb-4">
-        <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:4,display:'flex',alignItems:'center',gap:8}}><Icon n="lock" s={15} c="var(--g2)"/> Change Password</div>
-        <div style={{fontSize:13,color:'var(--text2)',marginBottom:14}}>Update your admin login password.</div>
-        <div className="mb-3"><label className="label">Current Password</label><div style={{position:'relative'}}><input className="input" type={showOld?'text':'password'} placeholder="••••••••" value={oldP} onChange={e=>setOldP(e.target.value)} style={{paddingRight:40}}/><button onClick={()=>setShowOld(!showOld)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'var(--text2)'}}><Icon n={showOld?'eyeoff':'eye'} s={15}/></button></div></div>
-        <div className="mb-3"><label className="label">New Password</label><div style={{position:'relative'}}><input className="input" type={showNew?'text':'password'} placeholder="Min 6 characters" value={newP} onChange={e=>setNewP(e.target.value)} style={{paddingRight:40}}/><button onClick={()=>setShowNew(!showNew)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'var(--text2)'}}><Icon n={showNew?'eyeoff':'eye'} s={15}/></button></div></div>
-        <div className="mb-3"><label className="label">Confirm New Password</label><input className="input" type="password" placeholder="Re-enter" value={confP} onChange={e=>setConfP(e.target.value)}/></div>
-        {passErr&&<div style={{color:'var(--red2)',fontSize:13,marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.08)',borderRadius:10}}>⚠️ {passErr}</div>}
-        <button className="btn btn-primary" onClick={changePass}>Update Password</button>
-      </div>
-      <div className="card" style={{borderColor:'rgba(239,68,68,0.2)'}}>
-        <div style={{fontFamily:'Syne',fontWeight:800,fontSize:15,marginBottom:8,color:'var(--red2)'}}>⚠️ Danger Zone</div>
-        <div style={{fontSize:13,color:'var(--text2)',marginBottom:14}}>Permanently deletes all data. Cannot be undone.</div>
-        <button className="btn btn-danger" onClick={()=>{if(!confirm('Delete ALL data? Cannot be undone!'))return;dispatch({type:'RESET'});toast('Data reset');}}>Reset All Data</button>
-      </div>
-    </div>
-  );
+    </div>`;
+  }).join('');
 }
 
-// ── Game Page ─────────────────────────────────────────────────
-function GamePage({state}){
-  const balance=state.transactions.reduce((s,t)=>['contribution','deposit','loan_repay'].includes(t.txType)?s+t.amount:s-t.amount,0);
-  const unlocked=MILESTONES.filter(m=>m.amount<=balance);
-  const nextMs=MILESTONES.find(m=>m.amount>balance);
-  return(
-    <div>
-      <div className="section-title mb-2">Savings <span className="accent">Game</span> 🎮</div>
-      <div style={{color:'var(--text2)',fontSize:13,marginBottom:20}}>Games are coming as separate artifacts — stay tuned! Below is your current progress.</div>
-      <div className="hero-balance mb-6" style={{textAlign:'center'}}>
-        <div style={{position:'relative',zIndex:1}}>
-          <div style={{fontSize:48,marginBottom:8}}>{unlocked.slice(-1)[0]?.emoji||'🌱'}</div>
-          <div style={{fontFamily:'Syne',fontSize:20,fontWeight:800}}>Level {unlocked.length} — {unlocked.slice(-1)[0]?.label||'Getting Started'}</div>
-          <div style={{fontFamily:'Syne',fontSize:40,fontWeight:800,marginTop:10,background:'linear-gradient(90deg,var(--g1),var(--g2))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{fmt(balance)}</div>
-        </div>
-      </div>
-      <div className="card">
-        <div className="section-title mb-4">Milestones</div>
-        {MILESTONES.map((ms,i)=>{
-          const done=balance>=ms.amount;
-          const isCurrent=!done&&(i===0||balance>=MILESTONES[i-1].amount);
-          const prog=done?100:Math.min((balance/ms.amount)*100,100);
-          return(
-            <div key={i} className={`milestone ${done?'done':''}`}>
-              <div style={{fontSize:26,filter:done?'none':'grayscale(70%)'}}>{ms.emoji}</div>
-              <div style={{flex:1}}>
-                <div style={{fontWeight:700,fontFamily:'Syne',fontSize:14,color:done?'var(--g2)':isCurrent?'var(--gold)':'var(--text)'}}>{ms.label}</div>
-                <div style={{fontSize:12,color:'var(--text2)'}}>{fmt(ms.amount)}</div>
-                {isCurrent&&<div className="progress-wrap mt-2"><div className="progress-bar" style={{width:`${prog}%`,background:'linear-gradient(90deg,var(--gold),var(--gold2))'}}/></div>}
-              </div>
-              <div style={{fontSize:20}}>{done?'✅':isCurrent?'🎯':'🔒'}</div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+// ─── SETTINGS ────────────────────────
+function renderSettings() {
+  const fn=DATA.settings?.fund_name||'A2DV Boys Fund';
+  const amt=DATA.settings?.monthly_amount||200;
+  $('curr-amt').textContent=`Currently ${fmt(amt)} / month · Total target: ${fmt(DATA.members.length*amt)}`;
+  $('fund-name-disp').textContent=fn;
+  const el=$('new-fname'); if(el) el.value=fn;
+}
+window.openAmtModal = () => { $('new-amt').value=DATA.settings?.monthly_amount||200; openModal('amt-modal'); };
+window.saveAmt = async () => {
+  const v=+$('new-amt').value;
+  if(!v||v<=0){toast('Enter valid amount','e');return;}
+  try { await updateDoc(doc(db,'settings','config'),{monthly_amount:v}); closeModal('amt-modal'); toast(`Monthly amount updated to ${fmt(v)}!`); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.saveFundName = async () => {
+  const n=$('new-fname').value.trim();
+  if(!n){toast('Enter fund name','e');return;}
+  try { await updateDoc(doc(db,'settings','config'),{fund_name:n}); closeModal('fname-modal'); toast('Fund name updated!'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.shareApp = () => {
+  const url=window.location.href;
+  if(navigator.share){navigator.share({title:'A2DV Boys Fund',url}).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('Link copied! Share it 🔗')).catch(()=>prompt('Copy this link:',url));}
+  else{prompt('Copy this link:',url);}
+};
+window.exportData = () => {
+  const d={exported_at:new Date().toISOString(),settings:DATA.settings,members:DATA.members,contributions:DATA.contributions,expenses:DATA.expenses,loans:DATA.loans,deposits:DATA.deposits};
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
+  a.download=`a2dv-backup-${todayStr()}.json`; a.click();
+  toast('Full backup downloaded! 📥');
+};
+window.changePassword = async () => {
+  const p1=$('new-pw').value, p2=$('new-pw2').value, errEl=$('pw-err');
+  if(!p1||p1.length<4){errEl.style.display='block';errEl.textContent='Minimum 4 characters';return;}
+  if(p1!==p2){errEl.style.display='block';errEl.textContent='Passwords do not match';return;}
+  errEl.style.display='none';
+  try { await updateDoc(doc(db,'settings','config'),{admin_password:p1}); closeModal('pw-modal'); toast('Password changed!'); }
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.doReset = async () => {
+  try {
+    const [cs,es,ls,ds]=await Promise.all([getDocs(collection(db,'contributions')),getDocs(collection(db,'expenses')),getDocs(collection(db,'loans')),getDocs(collection(db,'deposits'))]);
+    await Promise.all([...cs.docs,...es.docs,...ls.docs,...ds.docs].map(d=>deleteDoc(d.ref)));
+    $('rc').style.display='none'; toast('All fund data reset','e');
+  } catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ─── MODAL ───────────────────────────
+window.openModal = id => {
+  const m=$(id); if(m) m.classList.add('on');
+  document.body.style.overflow='hidden';
+};
+window.closeModal = id => {
+  const m=$(id); if(m) m.classList.remove('on');
+  document.body.style.overflow='';
+};
+document.querySelectorAll('.mov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('on');document.body.style.overflow='';};}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mov.on').forEach(m=>{m.classList.remove('on');document.body.style.overflow='';});}});
+
+// ─── TOAST ───────────────────────────
+window.toast = (msg,type='s') => {
+  const w=$('tw');
+  const t=document.createElement('div');
+  t.className=`toast t${type}`;t.textContent=msg;w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .4s';setTimeout(()=>t.remove(),400);},2800);
+};
+
+// ─── LOGOUT ──────────────────────────
+window.doLogout = () => {
+  UNSUBS.forEach(u=>u()); UNSUBS=[];
+  ROLE=null; LS.removeItem('a2dv_role');
+  $('app').classList.remove('on');
+  $('setup-overlay').classList.add('on');
+  $('login-pass').value='';
+  goStep(0);
+};
+
+// ─── OFFLINE DETECTION ───────────────
+window.addEventListener('online',()=>{
+  const b=$('conn-banner'); b.className='conn-ok'; b.textContent='✓ Back online';
+  b.style.display='block';
+  setTimeout(()=>b.style.display='none',3000);
+  syncAll(false);
+});
+window.addEventListener('offline',()=>{
+  const b=$('conn-banner'); b.className='conn-err offline'; b.textContent='📡 No internet — showing cached data';
+  b.style.display='block';
+});
+
+// ─── INIT ────────────────────────────
+async function init() {
+  // Try to load saved Firebase config
+  const savedCfg = LS.getItem('a2dv_fb_cfg');
+  const savedRole = LS.getItem('a2dv_role');
+  if (!savedCfg) {
+    $('loading').style.display='none';
+    $('setup-overlay').classList.add('on');
+    $('first-hint').style.display='block';
+    goStep(0); return;
+  }
+  const cfg = JSON.parse(savedCfg);
+  if (!initFirebase(cfg)) {
+    $('loading').style.display='none';
+    $('setup-overlay').classList.add('on');
+    toast('Firebase config error — please reconfigure','e');
+    goStep(0); return;
+  }
+  const ok = await testConn();
+  if (!ok) {
+    $('loading').style.display='none';
+    $('setup-overlay').classList.add('on');
+    goStep(0); return;
+  }
+  if (savedRole) {
+    ROLE=savedRole;
+    await launchApp(); return;
+  }
+  $('loading').style.display='none';
+  $('setup-overlay').classList.add('on');
+  goStep(0);
 }
 
-// ── Login ─────────────────────────────────────────────────────
-function LoginPage({onLogin,adminPass}){
-  const[u,setU]=useState('');const[p,setP]=useState('');const[mode,setMode]=useState('admin');const[showP,setShowP]=useState(false);const[err,setErr]=useState('');
-  const handle=()=>{
-    if(mode==='view'){onLogin('viewer');return;}
-    if(u==='admin'&&p===adminPass){onLogin('admin');}else setErr('Invalid credentials. Default: admin / a2dv2024');
-  };
-  return(
-    <div className="login-wrap">
-      <div className="login-orb1"/><div className="login-orb2"/>
-      <div className="login-card">
-        <div style={{textAlign:'center',marginBottom:26}}>
-          <div style={{width:60,height:60,borderRadius:16,background:'linear-gradient(135deg,rgba(59,130,246,0.2),rgba(37,99,235,0.1))',border:'1px solid rgba(59,130,246,0.3)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 12px',fontSize:28}}>💰</div>
-          <div style={{fontFamily:'Syne',fontSize:24,fontWeight:800,background:'linear-gradient(90deg,var(--g1),var(--g2))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>A2DV Boys</div>
-          <div style={{fontSize:13,color:'var(--text2)',marginTop:4}}>Group Fund Manager</div>
-        </div>
-        <div style={{display:'flex',gap:8,marginBottom:22,background:'rgba(255,255,255,0.03)',borderRadius:12,padding:4,border:'1px solid var(--border)'}}>
-          {['admin','view'].map(m=><button key={m} className={`btn ${mode===m?'btn-primary':'btn-ghost'}`} style={{flex:1,fontSize:13}} onClick={()=>{setMode(m);setErr('')}}>{m==='admin'?'🔐 Admin':'👁️ View Only'}</button>)}
-        </div>
-        {mode==='admin'&&<>
-          <div className="mb-3"><label className="label">Username</label><input className="input" placeholder="admin" value={u} onChange={e=>{setU(e.target.value);setErr('')}} onKeyDown={e=>e.key==='Enter'&&handle()}/></div>
-          <div className="mb-4"><label className="label">Password</label><div style={{position:'relative'}}><input className="input" type={showP?'text':'password'} placeholder="••••••••" value={p} onChange={e=>{setP(e.target.value);setErr('')}} onKeyDown={e=>e.key==='Enter'&&handle()} style={{paddingRight:40}}/><button onClick={()=>setShowP(!showP)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'var(--text2)'}}><Icon n={showP?'eyeoff':'eye'} s={15}/></button></div></div>
-          {err&&<div style={{color:'var(--red2)',fontSize:13,marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.08)',borderRadius:10}}>⚠️ {err}</div>}
-        </>}
-        {mode==='view'&&<div style={{textAlign:'center',padding:'6px 0 18px',color:'var(--text2)',fontSize:13}}>Read-only access — no changes allowed.</div>}
-        <button className="btn btn-primary w-full" style={{height:44,fontSize:15}} onClick={handle}>{mode==='admin'?'Sign In →':'Enter as Viewer →'}</button>
-        <div style={{textAlign:'center',marginTop:12,fontSize:11,color:'var(--text3)'}}>Default: admin / a2dv2024</div>
-      </div>
-    </div>
-  );
-}
-
-// ── App ───────────────────────────────────────────────────────
-function App(){
-  const[user,setUser]=useState(()=>load('a2dv_user',null));
-  const[page,setPage]=useState('dashboard');
-  const[state,dispatchRaw]=React.useReducer(reducer,null,()=>load('a2dv_state_v3',INIT_STATE));
-  const[toastMsg,setToastMsg]=useState(null);
-
-  useEffect(()=>{save('a2dv_state_v3',state)},[state]);
-  const dispatch=useCallback(a=>dispatchRaw(a),[]);
-  const toast=useCallback(m=>setToastMsg(m),[]);
-
-  if(!user)return<LoginPage onLogin={r=>{setUser(r);save('a2dv_user',r);}} adminPass={state.adminPass||DEFAULT_PASS}/>;
-
-  const isAdmin=user==='admin';
-  const balance=state.transactions.reduce((s,t)=>['contribution','deposit','loan_repay'].includes(t.txType)?s+t.amount:s-t.amount,0);
-
-  const NAV=[
-    {id:'dashboard',label:'Dashboard',icon:'dashboard'},
-    {id:'members',label:'Members',icon:'members'},
-    {id:'loans',label:'Loans',icon:'loans'},
-    {id:'history',label:'History',icon:'history'},
-    {id:'payment',label:'Payment',icon:'payment'},
-    {id:'export',label:'Export',icon:'export'},
-    {id:'game',label:'Game',icon:'game'},
-    {id:'settings',label:'Settings',icon:'settings'},
-  ];
-
-  return(
-    <div>
-      <nav className="nav">
-        <div className="nav-logo"><span style={{fontSize:20}}>💰</span>{state.fundName}</div>
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <span className="badge badge-blue hide-mobile">{fmt(balance)}</span>
-          <span className={`badge ${isAdmin?'badge-gold':'badge-blue'} hide-mobile`}>{isAdmin?'Admin':'Viewer'}</span>
-          <button className="btn btn-ghost btn-sm" onClick={()=>{setUser(null);save('a2dv_user',null);}}><Icon n="logout" s={14}/><span className="hide-mobile" style={{marginLeft:4}}>Logout</span></button>
-        </div>
-      </nav>
-
-      <div className="sidebar">
-        <div style={{padding:'8px 12px 14px',marginBottom:8,borderBottom:'1px solid var(--border)'}}>
-          <div style={{fontSize:10,color:'var(--text3)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.08em',marginBottom:4}}>Balance</div>
-          <div style={{fontFamily:'Syne',fontSize:21,fontWeight:800,color:'var(--g2)'}}>{fmt(balance)}</div>
-          <div style={{display:'flex',gap:5,marginTop:8,flexWrap:'wrap'}}>
-            {state.members.slice(0,5).map(m=><Avatar key={m.id} member={m} size={22} radius={6}/>)}
-            {state.members.length>5&&<div style={{width:22,height:22,borderRadius:6,background:'var(--card3)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,color:'var(--text2)',fontWeight:700}}>+{state.members.length-5}</div>}
-          </div>
-        </div>
-        {NAV.map(item=>(
-          <button key={item.id} className={`sidebar-item ${page===item.id?'active':''}`} onClick={()=>setPage(item.id)}>
-            <span className="s-icon"><Icon n={item.icon} s={15}/></span>{item.label}
-          </button>
-        ))}
-        <div style={{marginTop:'auto',paddingTop:14,borderTop:'1px solid var(--border)'}}>
-          <div style={{fontSize:11,color:'var(--text3)',padding:'0 12px'}}>{isAdmin?'🔐 Admin':'👁️ View Only'}</div>
-        </div>
-      </div>
-
-      <div className="main">
-        {page==='dashboard'&&<Dashboard state={state} isAdmin={isAdmin} dispatch={dispatch} toast={toast}/>}
-        {page==='members'&&<MembersPage state={state} isAdmin={isAdmin} dispatch={dispatch} toast={toast}/>}
-        {page==='loans'&&<LoansPage state={state} isAdmin={isAdmin} dispatch={dispatch} toast={toast}/>}
-        {page==='history'&&<HistoryPage state={state} isAdmin={isAdmin} dispatch={dispatch} toast={toast}/>}
-        {page==='payment'&&<PaymentPage state={state} isAdmin={isAdmin} dispatch={dispatch} toast={toast}/>}
-        {page==='export'&&<ExportPage state={state} isAdmin={isAdmin} dispatch={dispatch} toast={toast}/>}
-        {page==='game'&&<GamePage state={state}/>}
-        {page==='settings'&&<SettingsPage state={state} dispatch={dispatch} toast={toast} isAdmin={isAdmin}/>}
-      </div>
-
-      <div className="bottom-nav">
-        {NAV.map(item=>(
-          <button key={item.id} className={`bottom-nav-item ${page===item.id?'active':''}`} onClick={()=>setPage(item.id)}>
-            <Icon n={item.icon} s={18}/>{item.label}
-          </button>
-        ))}
-      </div>
-
-      {toastMsg&&<Toast msg={toastMsg} onDone={()=>setToastMsg(null)}/>}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+window.addEventListener('load', ()=>setTimeout(init,500));
 </script>
 </body>
 </html>
